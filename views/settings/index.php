@@ -1,0 +1,42 @@
+<form name="settings" method="post" action="<?= base_url() ?>settings/update" enctype="multipart/form-data">
+
+<div class="content_wrap_inner">
+
+	<div class="content_inner_top_right">
+		<h3>Module</h3>
+		<p><?= form_dropdown('enabled', config_item('enable_disable'), $settings['messages']['enabled']) ?></p>
+	</div>
+
+	<h3>Display</h3>
+
+	<p>Style
+	<?= form_dropdown('display_style', config_item('messages_display_style'), $settings['messages']['display_style']) ?>
+	</p>
+
+	<p>Date
+	<?= form_dropdown('date_style', config_item('date_style_types'), $settings['messages']['date_style']) ?>
+	</p>
+		
+</div>
+
+<span class="item_separator"></span>
+
+<div class="content_wrap_inner">
+	
+	<h3>Notifications</h3>	
+
+	<p>Allow
+	<?= form_dropdown('notifications_allow', config_item('yes_or_no'), $settings['messages']['notifications_allow']) ?>	
+	</p>
+
+	<p>Method
+	<?= form_dropdown('notifications_method', config_item('messages_notifications_method'), $settings['messages']['notifications_method']) ?>
+	</p>
+
+	<input type="hidden" name="module" value="messages">
+
+	<p><input type="submit" name="save" value="Save" /></p>
+	
+</div>
+
+</form>
