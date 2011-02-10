@@ -1,263 +1,133 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-
-class Api extends OAuth_Controller
+/* 
+ * Messages API : Core : Social-Igniter
+ *
+ */
+class Api extends Oauth_Controller
 {
     function __construct()
     {
-        parent::__construct();      
+        parent::__construct();  
+        
+		$this->load->library('messages_igniter');            
 	}
 	
-    /* GET types */
-    // Recent Comments
-    function recent_get()
+    function all_get()
     {
-        $comments = $this->social_tools->get_comments();
+    	$messages = $this->messages_model->get_messages();
         
-        if($comments)
+        if($messages)
         {
-            $this->response($comments, 200);
-        }
-
-        else
-        {
-            $this->response(array('status' => 'error', 'data' => 'Could not find any comments'), 404);
-        }
-    }
-
-
-	// Comments for a piece of content
-	function content_get()
-    {
-   		 	
-    	// If No ID return error
-        if(!$this->get('id'))
-        {
-            $this->response(array('status' => 'error', 'message' => 'Specify a content_id'), 200);
-        }
-
-        $comments = $this->social_tools->get_comments_content($this->get('id'));
-    	
-        if($comments)
-        {
-            $this->response($comments, 200);
+            $message 	= array('status' => 'success', 'data' => $messages);
+            $response	= 200;
         }
         else
         {
-            $this->response(array('status' => 'error', 'message' => 'No comments could be found'), 404);
+            $message 	= array('status' => 'error', 'message' => 'Could not find any messages');
+            $response	= 404;
         }
+        
+        $this->response($message, $response);        
     }
     
-    // New Comments for a user
+    function view_get()
+    {
+    	$search_by	= $this->uri->segment(4);
+    	$search_for	= $this->uri->segment(5);
+    	$messages = $this->messages_model->get_messages_view($search_by, $search_for);
+
+        $this->response($messages, $response);
+    }
+
 	function new_authd_get()
-	{
-		if ($new_comments = FALSE)//$this->social_tools->get_comments_new_count())
+	{	
+		if ($message_count = $this->messages_igniter->get_inbox_new_count($this->oauth_user_id))
 		{
-         	$this->response(array('status' => 'success', 'message' => $new_comments), 200);	
+         	$messages = array('status' => 'success', 'message' => $message_count);	
 		}
 		else
 		{
-         	$this->response(array('status' => 'error', 'message' => 0), 200);			
+         	$messages = array('status' => 'error', 'message' => $message_count);			
 		}
+
+        $this->response($messages, 200);
 	}
-	
+
+
 
 	/* POST types */
-	// Creates Comment
-    function create_authd_post()
+    function send_authd_post()
     {
-		$this->form_validation->set_rules('comment', 'Comment', 'required');
+		$this->form_validation->set_rules('receiver_id', 'Receiver', 'required');
+		$this->form_validation->set_rules('module', 'Module', 'required');
+		$this->form_validation->set_rules('type', 'Type', 'required');
+		$this->form_validation->set_rules('message', 'Message', 'required');
 
 		// Validation
 		if ($this->form_validation->run() == true)
-		{  
-			if ($content = $this->social_igniter->check_content_comments($this->input->post('content_id')))
+		{			
+			$receiver = $this->social_auth->get_user($this->input->post('receiver_id'));
+			
+			if (!$this->input->post('site_id')) $site_id = config_item('site_id');
+			else $site_id = $this->input->post('site_id');
+			
+			if ($receiver)
 			{
-	        	$comment_data = array(
-	    			'reply_to_id'	=> $this->input->post('reply_to_id'),
-	    			'content_id'	=> $content->content_id,		
-					'module'		=> $content->module,
-	    			'type'			=> $content->type,
-	    			'user_id'		=> $this->oauth_user_id,
-	    			'comment'		=> $this->input->post('comment'),
+	        	$message_data = array(
+	    			'site_id'		=> $site_id,
+	        		'reply_to_id'	=> $this->input->post('reply_to_id'),
+	    			'receiver_id'	=> $this->input->post('receiver_id'),	
+					'sender_id'		=> $this->oauth_user_id,
+					'module'		=> $this->input->post('module'),
+	    			'type'			=> $this->input->post('type'),
+	    			'subject'		=> $this->input->post('subject'),
+	    			'message'		=> $this->input->post('message'),
 	    			'geo_lat'		=> $this->input->post('geo_lat'),
 	    			'geo_long'		=> $this->input->post('geo_long'),
-	    			'geo_accuracy'	=> $this->input->post('geo_accuracy'),
-	    			'approval'		=> $content->comments_allow
+	    			'geo_accuracy'	=> $this->input->post('geo_accuracy')    			
 	        	);
-	
+	        	
 				// Insert
-				if ($comment = $this->social_tools->add_comment($comment_data))
-				{
-					
-					$comment_data['comment_id']		= $comment->comment_id;
-					$comment_data['created_at']		= format_datetime(config_item('comments_date_style'), $comment->created_at);
-					$comment_data['name']			= $comment->name;
-					$comment_data['username']		= $comment->username;
-					$comment_data['profile_link']	= base_url().'profiles/'.$comment->username;
-					$comment_data['profile_image']	= $this->social_igniter->profile_image($comment->user_id, $comment->image, $comment->email);;
-					$comment_data['sub']			= '';
-				
-					// Set Reply Id For Comments
-					if ($comment->reply_to_id)
-					{
-						$comment_data['sub']			= 'sub_';
-						$comment_data['reply_id']		= $comment->reply_to_id;
-					}
+			    $result = $this->messages_igniter->add_message($message_data);
 	
-					// Set Display Comment
-					if ($content->comments_allow == 'A')
-					{
-						$comment_data['comment']	= '<i>Your comment is awaiting approval!</i>';
-					}
-				
-		        	$message	= array('status' => 'success', 'data' => $comment_data);
-		        	$response	= 200;
+				if ($result)
+				{
+		        	$message = array('status' => 'success', 'data' => $result, 'receivers' => $receiver);
 		        }
 		        else
 		        {
-			        $message	= array('status' => 'error', 'message' => 'Oops unable to post your comment');
-			        $response	= 200;		        
+			        $message = array('status' => 'error', 'message' => 'Oops unable to send your message');
 		        }
 			}
 			else
 			{
-		        $message	= array('status' => 'error', 'message' => 'Oops you can not comment on that!');
-		        $response	= 200;
-			}	
+		        $message = array('status' => 'error', 'message' => 'That user does exist');
+			}
 		}
-		// Not Valid
 		else 
 		{	
-	        $message	= array('status' => 'error', 'message' => validation_errors());
-	        $response	= 200;
-		}
+	        $message = array('status' => 'error', 'message' => 'Hrmm '.validation_errors());
+		}			
 
-        $this->response($message, $response);
+        $this->response($message, 200);
     }
-        
-    
-    /* PUT types */
-    function viewed_authd_put()
-    {				
-        if($this->social_tools->update_comment_viewed($this->get('id')))
-        {
-            $this->response(array('status' => 'success', 'message' => 'Comment viewed'), 200);
-        }
-        else
-        {
-            $this->response(array('status' => 'error', 'message' => 'Could not mark as viewed'), 404);
-        }    
-    }   
-    
-    function approve_authd_put()
-    {
-    	$approve = $this->social_tools->update_comment_approve($this->get('id'));	
-
-        if($approve)
-        {
-            $this->response(array('status' => 'success', 'message' => 'Comment approved'), 200);
-        }
-        else
-        {
-            $this->response(array('status' => 'error', 'message' => 'Could not be approved'), 404);
-        }
-    } 
-
-    /* DELETE types */
-    function destroy_authd_delete()
+      
+    function destroy_delete()
     {		
 		// Make sure user has access to do this func
 		$access = $this->social_tools->has_access_to_modify('comment', $this->get('id'));
     	
-    	// Move this up to result of "user_has_access"
     	if ($access)
-        {
-			if ($comment = $this->social_tools->get_comment($this->get('id')))
-			{        
-	        	$this->social_tools->delete_comment($comment->comment_id);
-	        
-				// Reset comments with this reply_to_id
-				$this->social_tools->update_comment_orphaned_children($comment->comment_id);
-				
-				// Update Content
-				$this->social_igniter->update_content_comments_count($comment->comment_id);
-	        
-	        	$this->response(array('status' => 'success', 'message' => 'Comment deleted'), 200);
-	        }
-	        else
-	        {
-	            $this->response(array('status' => 'error', 'message' => 'Could not delete that comment!'), 404);
-	        }
+        {   
+        	$this->social_tools->delete_message($this->get('id'));
+        	        
+        	$message = array('status' => 'success', 'message' => 'Message deleted');
         }
         else
         {
-            $this->response(array('status' => 'error', 'message' => 'Could not delete that comment!'), 404);
+            $message = array('status' => 'error', 'message' => 'Could not delete that message');
         }
-        
-    }
-    
-	// Validation
-	function akismet()
-	{
-		return FALSE;
-/*	
-		$this->load->library('akismet');
-		
-		$comment = array('author' => $this->input->post('comment_name'), 'email' => $this->input->post('comment_email'), 'body' => $this->input->post('comment'));
-		$config  = array('blog_url' => config_item('site_url'), 'api_key' => config_item('site_akismet_key'), 'comment' => $comment);
-		
-		$this->akismet->init($config);
-		 
-		if ($this->akismet->errors_exist())
-		{				
-			if ($this->akismet->is_error('AKISMET_INVALID_KEY')) 			
-			{
-				return FALSE;
-			}
-			elseif ($this->akismet->is_error('AKISMET_RESPONSE_FAILED'))
-			{
-				return FALSE;
-			}
-			elseif ($this->akismet->is_error('AKISMET_SERVER_NOT_FOUND'))
-			{
-				return FALSE;
-			}
-			else															
-			{
-				return TRUE;
-			}
-		}
-		else
-		{
-			if ($this->akismet->is_spam())	
-			{
-				$this->form_validation->set_message('akistmet_validate', 'We think your comment might be spam!"');		
-				return FALSE; 
-			}
-			else
-			{
-				return TRUE;
-			}
-		}
-*/			
-	}
-	
-	function recaptcha($val)
-	{
-		return FALSE;
-/*
-	    $this->load->library('recaptcha');	
-	
-		if ($this->recaptcha->check_answer($this->input->ip_address(), $this->input->post('recaptcha_challenge_field'), $val))
-		{
-			return TRUE;
-		} 
-		else
-		{
-			$this->form_validation->set_message('check_captcha', $this->lang->line('recaptcha_incorrect_response'));
-			return FALSE;
-		}
-*/		
-	}    
 
+        $this->response($message, 200);        
+    }
 }

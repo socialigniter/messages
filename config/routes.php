@@ -13,6 +13,7 @@
 * more custom like 'classes' or 'products'
 */
 
-$route['home/messages/drafts']			= 'home/index';
-$route['messages/home/sent']			= 'home/index';
-$route['messages/home']					= 'home/index';
+$route['home/messages/compose']			= 'home/compose';
+$route['messages/home/inbox']			= 'home/mailbox';
+$route['messages/home/drafts']			= 'home/mailbox';
+$route['messages/home/sent']			= 'home/mailbox';

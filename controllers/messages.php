@@ -1,5 +1,5 @@
 <?php
-class Messages extends Public_Controller
+class Messages extends Site_Controller
 {
     function __construct()
     {

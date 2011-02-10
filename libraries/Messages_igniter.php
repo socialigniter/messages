@@ -9,10 +9,9 @@
 *
 * Contains basic blog information
 */
- 
+
 class Messages_igniter
 {
-
 	function __construct()
 	{
 		$this->ci =& get_instance();
@@ -21,14 +20,23 @@ class Messages_igniter
 		$this->ci->load->model('messages_model');
 
 		// Define Congfig Variables
-		$this->site_id					= config_item('site_id');
-
+		$this->site_id = config_item('site_id');
 	}
 	
 	/* Messages */
-	function get_inbox($receiver_id)
+	function get_inbox($user_id)
 	{
-		return $this->ci->messages_model->get_inbox($receiver_id);
+		return $this->ci->messages_model->get_inbox($user_id);
+	}
+
+	function get_sent($sender_id)
+	{
+		return $this->ci->messages_model->get_sent($sender_id);
+	}
+	
+	function get_drafts($sender_id)
+	{
+		return $this->ci->messages_model->get_drafts($sender_id);
 	}
 
 	function get_inbox_new_count($receiver_id)
@@ -36,19 +44,10 @@ class Messages_igniter
 		return $this->ci->messages_model->get_inbox_new_count($receiver_id);
 	}
 
-	function get_sent_or_drafts($sender_id, $status)
-	{
-		return $this->ci->messages_model->get_sent_or_drafts($sender_id, $status);
+	function add_message($message_data)
+	{		
+		return $this->ci->messages_model->add_message($message_data);
 	}
 
-	function add_message($message_data)
-	{
-		$result = $this->ci->messages_model->add_message($this->site_id, $message_data);
-		return $result;
-	}	
-
-	
-
 	/* Settings */
-
 }
