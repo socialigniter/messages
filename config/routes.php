@@ -4,16 +4,20 @@
 * Author: 	Brennan Novak
 * 		  	contact@social-igniter.com
 *
-* Project:	http://social-igniter.com/
-* Source: 	http://github.com/socialigniter/core
+* Project:	http://social-igniter.com/pages/modules/messages
+* Source: 	http://github.com/socialigniter/messages
 *
-* Standard installed routes for Cart Module. 
-*
-* All routes must route to the controller 'cart' the 1st URI segment can be something
-* more custom like 'classes' or 'products'
+* Routes for Messages Module.
 */
 
-$route['home/messages/compose']			= 'home/compose';
-$route['messages/home/inbox']			= 'home/mailbox';
-$route['messages/home/drafts']			= 'home/mailbox';
-$route['messages/home/sent']			= 'home/mailbox';
+/* Api */
+$route['messages/api/viewed/(:any)/(:any)']		= 'api/viewed/$1/$2';
+$route['messages/api/send/(:any)/(:any)']		= 'api/send/$1/$2';
+
+/* Home */
+$route['messages/home/compose']		= 'home/compose';
+$route['messages/home/inbox']		= 'home/mailbox';
+$route['messages/home/drafts']		= 'home/mailbox';
+$route['messages/home/sent']		= 'home/mailbox';
+$route['messages/home/read/(:any)']	= 'home/read';
+$route['messages/home/read']		= 'home/read';

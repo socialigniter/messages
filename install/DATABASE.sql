@@ -8,6 +8,7 @@ CREATE TABLE `messages` (
   `type` char(16) COLLATE utf8_unicode_ci DEFAULT NULL,
   `subject` varchar(176) COLLATE utf8_unicode_ci DEFAULT NULL,
   `message` text COLLATE utf8_unicode_ci,
+  `attachments` text COLLATE utf8_unicode_ci,
   `geo_lat` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `geo_long` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `geo_accuracy` varchar(8) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,  

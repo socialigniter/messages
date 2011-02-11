@@ -3,11 +3,11 @@
 * Blog Library
 *
 * @package		Social Igniter
-* @subpackage	Blog Igniter Library
+* @subpackage	Messages Igniter Library
 * @author		Brennan Novak
-* @link			http://social-igniter.com
+* @link			http://social-igniter.com/pages/modules/messages
 *
-* Contains basic blog information
+* Contains methods for Messages Module
 */
 
 class Messages_igniter
@@ -16,14 +16,16 @@ class Messages_igniter
 	{
 		$this->ci =& get_instance();
 		
-		// Load Universal Models
+		// Load Models
 		$this->ci->load->model('messages_model');
-
-		// Define Congfig Variables
-		$this->site_id = config_item('site_id');
 	}
 	
 	/* Messages */
+	function get_message($message_id)
+	{
+		return $this->ci->messages_model->get_message($message_id);
+	}
+	
 	function get_inbox($user_id)
 	{
 		return $this->ci->messages_model->get_inbox($user_id);
@@ -49,5 +51,13 @@ class Messages_igniter
 		return $this->ci->messages_model->add_message($message_data);
 	}
 
-	/* Settings */
+	function update_message_value($message_data)
+	{
+		if ($update = $this->ci->messages_model->update_message($message_data))
+		{
+			return $update;
+		}
+
+		return FALSE;	
+	}
 }

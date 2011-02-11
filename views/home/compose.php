@@ -31,8 +31,8 @@ $(document).ready(function()
 	$("#message_compose").bind('submit', function(eve)
 	{
 		eve.preventDefault();
-		var valid_subject	= isFieldValid('#message_subject', 'Howdi');
-		var valid_message	= isFieldValid('#message_body', 'Your message goes here...');
+		var valid_subject	= isFieldValid('#message_subject', 'Howdi', 'You need a subject');
+		var valid_message	= isFieldValid('#message_body', 'Your message goes here...', 'You need to type a message');
 
 		// Validation
 		if (valid_subject == true && valid_message == true)
@@ -40,12 +40,10 @@ $(document).ready(function()
 			var message_data = $('#message_compose').serializeArray();
 			message_data.push({'name':'module','value':'messages'},{'name':'type','value':'personal'});
 
-			console.log(message_data);
-
 			$(this).oauthAjax(
 			{
 				oauth 		: user_data,
-				url			: base_url + 'api/messages/send',
+				url			: base_url + 'api/messages/compose',
 				type		: 'POST',
 				dataType	: 'json',
 				data		: message_data,
@@ -65,28 +63,6 @@ $(document).ready(function()
 		{
 			eve.preventDefault();
 		}		
-	});
-
-	// Add Category
-	$('[name=category_id]').change(function()
-	{	
-		if($(this).val() == 'add_category')
-		{
-			$('[name=category_id]').find('option:first').attr('selected','selected');
-			$.uniform.update('[name=category_id]');
-
-			$.categoryEditor(
-			{
-				url_api		: base_url + 'api/categories/view/module/users',
-				url_pre		: base_url + 'blog/categories/',
-				url_sub		: base_url + 'api/categories/create',		
-				module		: 'messages',
-				type		: 'group',
-				title		: 'Add Channel',
-				slug_value	: '',
-				trigger		: $('.content [name=category_id]')
-			});			
-		}
-	});		
+	});	
 });
 </script>

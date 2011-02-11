@@ -1,3 +1,3 @@
-<pre>
-<?php print_r($messages) ?>
-</pre>
+<ol id="mailbox">
+	<?= $mailbox_view ?>
+</ol>

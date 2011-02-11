@@ -1,0 +1,1 @@
+<?php print_r($read_message) ?>

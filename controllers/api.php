@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 /* 
- * Messages API : Core : Social-Igniter
+ * Messages API : Module : Social-Igniter
  *
  */
 class Api extends Oauth_Controller
@@ -53,10 +53,7 @@ class Api extends Oauth_Controller
         $this->response($messages, 200);
 	}
 
-
-
-	/* POST types */
-    function send_authd_post()
+    function compose_authd_post()
     {
 		$this->form_validation->set_rules('receiver_id', 'Receiver', 'required');
 		$this->form_validation->set_rules('module', 'Module', 'required');
@@ -69,7 +66,10 @@ class Api extends Oauth_Controller
 			$receiver = $this->social_auth->get_user($this->input->post('receiver_id'));
 			
 			if (!$this->input->post('site_id')) $site_id = config_item('site_id');
-			else $site_id = $this->input->post('site_id');
+			else 								$site_id = $this->input->post('site_id');
+
+			if (!$this->input->post('status'))	$status	= 'P';
+			else 								$status = $this->input->post('status');
 			
 			if ($receiver)
 			{
@@ -84,7 +84,8 @@ class Api extends Oauth_Controller
 	    			'message'		=> $this->input->post('message'),
 	    			'geo_lat'		=> $this->input->post('geo_lat'),
 	    			'geo_long'		=> $this->input->post('geo_long'),
-	    			'geo_accuracy'	=> $this->input->post('geo_accuracy')    			
+	    			'geo_accuracy'	=> $this->input->post('geo_accuracy'),
+	    			'status'		=> $status  			
 	        	);
 	        	
 				// Insert
@@ -111,6 +112,34 @@ class Api extends Oauth_Controller
 
         $this->response($message, 200);
     }
+    
+    function viewed_authd_put()
+	{
+        if ($this->messages_igniter->update_message_value(array('message_id' => $this->get('id'), 'viewed' => 'Y')))
+        {
+            $message = array('status' => 'success', 'message' => 'Message viewed');
+        }
+        else
+        {
+            $message = array('status' => 'error', 'message' => 'Message could not be marked as viewed');
+        }    
+
+        $this->response($message, 200);
+    }   
+    
+    function send_authd_put()
+    {
+        if ($this->messages_igniter->update_message_value(array('message_id' => $this->get('id'), 'status' => 'P')))
+        {
+            $message = array('status' => 'success', 'message' => 'Message sent');
+        }
+        else
+        {
+            $message = array('status' => 'error', 'message' => 'Message could not be sent');
+        }
+
+        $this->response($message, 200);
+    }     
       
     function destroy_delete()
     {		
