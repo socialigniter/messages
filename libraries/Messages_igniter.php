@@ -17,6 +17,29 @@ class Messages_igniter
 		$this->ci =& get_instance();
 		
 		$this->ci->load->model('messages_model');
+
+		// Config Email	
+		$this->ci->load->library('email');
+		
+		$this->config_email['protocol']  	= config_item('site_email_protocol');
+		$this->config_email['mailtype']  	= 'html';
+		$this->config_email['charset']  	= 'UTF-8';
+		$this->config_email['crlf']			= "\r\n";
+		$this->config_email['newline'] 		= "\r\n"; 			
+		$this->config_email['wordwrap']  	= FALSE;
+		$this->config_email['validate']		= TRUE;
+		$this->config_email['priority']		= 1;
+		
+		if (config_item('site_email_protocol') == 'smtp')
+		{
+			$this->config_email['smtp_host'] 	= config_item('site_smtp_host');
+			$this->config_email['smtp_user'] 	= config_item('site_smtp_user');
+			$this->config_email['smtp_pass'] 	= config_item('site_smtp_pass');
+			$this->config_email['smtp_port'] 	= config_item('site_smtp_port');
+		}
+
+		$this->ci->email->initialize($this->config_email);		
+		
 	}
 	
 	/* Messages */
@@ -54,7 +77,26 @@ class Messages_igniter
 	{		
 		if ($message_id = $this->ci->messages_model->add_message($message_data))
 		{
-			return $this->get_message($message_id);
+			$message = $this->get_message($message_id);
+		
+			$email_data = array(
+				'message_id'		=> $message->message_id,
+				'message_subject'	=> $message->subject, 
+				'message_message'	=> $message->message,
+				'message_profile'	=> base_url().'profile/'.$message->username,
+				'message_sender'	=> $message->name
+			);
+		
+			$email_message = $this->ci->load->view('../modules/messages/views/emails/message', $email_data, true);
+
+			$this->ci->email->set_newline("\r\n");
+			$this->ci->email->from($message->email, $message->name);
+			$this->ci->email->to($message->email);
+			$this->ci->email->subject($message->subject);
+			$this->ci->email->message($email_message);
+			$this->ci->email->send();
+		
+			return $message;
 		}
 		else
 		{
