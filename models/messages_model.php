@@ -1,5 +1,4 @@
 <?php
-
 class Messages_model extends CI_Model
 {    
     function __construct()
@@ -12,21 +11,22 @@ class Messages_model extends CI_Model
  		$this->db->select('*');
  		$this->db->from('messages');    
  		$this->db->join('users', 'messages.sender_id = users.user_id'); 				
- 		$this->db->join('users_meta', 'messages.sender_id = users.user_id');	
+ 		$this->db->join('users_meta', 'messages.sender_id = users_meta.user_id');	
  		$this->db->join('sites', 'messages.site_id = sites.site_id');
 		$this->db->where('messages.message_id', $message_id);
  		$result = $this->db->get()->row();	
  		return $result;	      
     } 
 
-    function get_messages($message_id)
+    function get_message_replies($reply_to_id)
     {
  		$this->db->select('*');
  		$this->db->from('messages');    
  		$this->db->join('users', 'messages.sender_id = users.user_id'); 				
- 		$this->db->join('users_meta', 'messages.sender_id = users.user_id');	
+ 		$this->db->join('users_meta', 'messages.sender_id = users_meta.user_id');	
  		$this->db->join('sites', 'messages.site_id = sites.site_id');
-		$this->db->where('messages.reply_to_id', $message_id);
+		$this->db->where('messages.reply_to_id', $reply_to_id);
+		$this->db->order_by('messages.sent_at', 'asc');
  		$result = $this->db->get();	
  		return $result->result();    
     } 
@@ -81,13 +81,10 @@ class Messages_model extends CI_Model
     
     function add_message($message_data)
     {
- 		$message_data['viewed']		= 'N';
 		$message_data['sent_at']	= unix_to_mysql(now());
 		$message_data['opened_at']	= unix_to_mysql(now());
-		
 		$this->db->insert('messages', $message_data);
-		$message_id = $this->db->insert_id();
-		return $this->db->get_where('messages', array('message_id' => $message_id))->row();	
+		return $this->db->insert_id();
     }
     
     function update_message($message_data)

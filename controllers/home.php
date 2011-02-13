@@ -36,18 +36,16 @@ class Home extends Dashboard_Controller
 		$mailbox_view = NULL;		
 		
 		if (!empty($messages))
-		{
+		{		
 			foreach($messages as $message)
-			{
+			{		
 				$this->data['message_id'] 			= $message->message_id;
-				$this->data['message_type']			= $message->type;
 				$this->data['message_viewed']		= item_viewed('item', $message->viewed);
 				$this->data['message_avatar']		= $this->social_igniter->profile_image($message->user_id, $message->image, $message->email);
 				$this->data['message_userlink']		= base_url().'profile/'.$message->username;
 				$this->data['message_user']			= $message->name;
 
-				$this->data['message_subject']		= character_limiter($message->subject, 45);
-				$this->data['message_subject_link']	= base_url().$message->module.'/view/'.$message->message_id;
+				$this->data['message_subject']		= character_limiter($message->subject, 40);
 				$this->data['message_message']		= character_limiter($message->message, 40);
 				$this->data['message_sent_date']	= format_datetime(config_item('messages_date_style'), $message->sent_at);
 
@@ -56,11 +54,22 @@ class Home extends Dashboard_Controller
 				
 				// Actions
 				$this->data['message_status']		= $message->status;
-				$this->data['message_read']			= base_url().'home/messages/read/'.$message->message_id;
+				
+				if ($message->reply_to_id)
+				{
+					$message_id_link = $message->reply_to_id;
+				}
+				else
+				{
+					$message_id_link = $message->message_id;
+				}
+				
+				$this->data['message_read']			= base_url().'home/messages/'.$this->uri->segment(3).'/'.$message_id_link;
 				$this->data['message_delete']		= base_url().'api/messages/destroy/id/'.$message->message_id;
 				
 				// View
 				$mailbox_view .= $this->load->view('../modules/messages/views/partials/item_mailbox.php', $this->data, true);
+		
 			}
 		}
 	 	else
@@ -75,10 +84,56 @@ class Home extends Dashboard_Controller
 	
 	function read()
 	{
-		$message = $this->messages_igniter->get_message($this->uri->segment(4));
+		$messages_base 			= $this->messages_igniter->get_message($this->uri->segment(4));
+		$messages_thread_view	= NULL;
+
+		if ($messages_base)
+		{
+			$this->data['sub_title'] = $messages_base->subject;
+
+			// Mark as viewed
+			if ($messages_base->viewed == 'N') $this->messages_igniter->update_message_value(array('message_id' => $messages_base->message_id, 'viewed' => 'Y'));
 		
-		$this->data['read_message']	= $message;
-		$this->data['sub_title']	= 'Read';
+			$this->data['message_thread_id']	= $messages_base->message_id;
+			$this->data['message_id']			= $messages_base->message_id;
+			$this->data['message_subject']		= $messages_base->subject;		
+			$this->data['message_avatar']		= $this->social_igniter->profile_image($messages_base->user_id, $messages_base->image, $messages_base->email);
+			$this->data['message_userlink']		= base_url().'profile/'.$messages_base->username;
+			$this->data['message_user']			= $messages_base->name;
+			$this->data['message_message']		= $messages_base->message;
+			$this->data['message_sent_date']	= format_datetime(config_item('messages_date_style'), $messages_base->sent_at);
+		
+			$messages_thread		= $this->messages_igniter->get_message_replies($messages_base->message_id);			
+			$messages_thread_view  .= $this->load->view('../modules/messages/views/partials/item_message.php', $this->data, true);
+
+			foreach($messages_thread as $message)
+			{
+				// Mark as viewed
+				if (($message->receiver_id == $this->session->userdata('user_id')) && ($message->viewed == 'N')) $this->messages_igniter->update_message_value(array('message_id' => $message->message_id, 'viewed' => 'Y'));
+
+				$this->data['message_id'] 			= $message->message_id;
+				$this->data['message_avatar']		= $this->social_igniter->profile_image($message->user_id, $message->image, $message->email);
+				$this->data['message_userlink']		= base_url().'profile/'.$message->username;
+				$this->data['message_user']			= $message->name;
+
+				$this->data['message_message']		= character_limiter($message->message, 40);
+				$this->data['message_sent_date']	= format_datetime(config_item('messages_date_style'), $message->sent_at);			
+				
+				// Actions
+				$this->data['message_status']		= $message->status;
+				$this->data['message_delete']		= base_url().'api/messages/destroy/id/'.$message->message_id;
+				
+				// View
+				$messages_thread_view .= $this->load->view('../modules/messages/views/partials/item_message.php', $this->data, true);
+			}
+		}
+	 	else
+	 	{
+			redirect(base_url().'home/messages/'.$this->uri->segment(3));
+ 		}
+
+		// Output		
+		$this->data['message_thread']		= $messages_thread_view;		
 	
 		$this->render();
 	}
@@ -92,5 +147,18 @@ class Home extends Dashboard_Controller
 			
 		$this->render();
 	}
+	
+	/* Partials */
+	function item_message()
+	{
+		$this->data['message_id']			= '{MESSAGE_ID}';
+		$this->data['message_avatar']		= '{AVATAR}';
+		$this->data['message_userlink']		= '{USERLINK}';
+		$this->data['message_user']			= '{USER}';
+		$this->data['message_sent_date']	= '{MESSAGE_DATE}';
+		$this->data['message_message']		= '{MESSAGE}';
+
+		$this->load->view('../modules/messages/views/partials/item_message', $this->data);
+	}	
 
 }

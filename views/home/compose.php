@@ -38,7 +38,7 @@ $(document).ready(function()
 		if (valid_subject == true && valid_message == true)
 		{	
 			var message_data = $('#message_compose').serializeArray();
-			message_data.push({'name':'module','value':'messages'},{'name':'type','value':'personal'});
+			message_data.push({'name':'module','value':'messages'},{'name':'type','value':'message'});
 
 			$(this).oauthAjax(
 			{

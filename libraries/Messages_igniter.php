@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
-* Blog Library
+* Messages Igniter Library
 *
 * @package		Social Igniter
 * @subpackage	Messages Igniter Library
@@ -16,7 +16,6 @@ class Messages_igniter
 	{
 		$this->ci =& get_instance();
 		
-		// Load Models
 		$this->ci->load->model('messages_model');
 	}
 	
@@ -25,7 +24,12 @@ class Messages_igniter
 	{
 		return $this->ci->messages_model->get_message($message_id);
 	}
-	
+
+	function get_message_replies($reply_to_id)
+	{
+		return $this->ci->messages_model->get_message_replies($reply_to_id);
+	}
+		
 	function get_inbox($user_id)
 	{
 		return $this->ci->messages_model->get_inbox($user_id);
@@ -48,7 +52,14 @@ class Messages_igniter
 
 	function add_message($message_data)
 	{		
-		return $this->ci->messages_model->add_message($message_data);
+		if ($message_id = $this->ci->messages_model->add_message($message_data))
+		{
+			return $this->get_message($message_id);
+		}
+		else
+		{
+			return FALSE;
+		}
 	}
 
 	function update_message_value($message_data)

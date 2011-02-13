@@ -3,12 +3,12 @@
 	<div class="item_message_avatar"><img src="<?= $message_avatar ?>"></div>
 	
 	<div class="item_message_mailbox_col_1">
-		<span class="item_message_username"><a href="<?= $message_userlink ?>"><?= $message_user ?></a></span>
-		<span class="item_message_meta"><?= $message_sent_date ?></span>
+		<a class="item_message_mailbox_username" href="<?= $message_userlink ?>"><?= $message_user ?></a>
+		<span class="item_message_mailbox_data item_message_meta"><?= $message_sent_date ?></span>
 	</div>
 	
 	<div class="item_message_mailbox_col_2">
-		<span class="item_message_subject"><a href="<?= $message_subject_link ?>"><?= $message_subject ?></a></span>
+		<span class="item_message_subject"><a href="<?= $message_read ?>"><?= $message_subject ?></a></span>
 		<span class="item_message_meta"><?= $message_message ?></span>		
 	</div>
 	

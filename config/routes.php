@@ -15,9 +15,12 @@ $route['messages/api/viewed/(:any)/(:any)']		= 'api/viewed/$1/$2';
 $route['messages/api/send/(:any)/(:any)']		= 'api/send/$1/$2';
 
 /* Home */
-$route['messages/home/compose']		= 'home/compose';
-$route['messages/home/inbox']		= 'home/mailbox';
-$route['messages/home/drafts']		= 'home/mailbox';
-$route['messages/home/sent']		= 'home/mailbox';
-$route['messages/home/read/(:any)']	= 'home/read';
-$route['messages/home/read']		= 'home/read';
+$route['messages/home/compose']					= 'home/compose';
+$route['messages/home/inbox/(:num)']			= 'home/read';
+$route['messages/home/inbox']					= 'home/mailbox';
+$route['messages/home/drafts/(:num)']			= 'home/read';
+$route['messages/home/drafts']					= 'home/mailbox';
+$route['messages/home/sent/(:num)']				= 'home/read';
+$route['messages/home/sent']					= 'home/mailbox';
+$route['messages/home/read/(:any)']				= 'home/read';
+$route['messages/home/read']					= 'home/read';

@@ -18,16 +18,14 @@ class Api extends Oauth_Controller
         
         if($messages)
         {
-            $message 	= array('status' => 'success', 'data' => $messages);
-            $response	= 200;
+            $message = array('status' => 'success', 'message' => 'Yay, we found some messages', 'data' => $messages);
         }
         else
         {
-            $message 	= array('status' => 'error', 'message' => 'Could not find any messages');
-            $response	= 404;
+            $message = array('status' => 'error', 'message' => 'Could not find any messages');
         }
         
-        $this->response($message, $response);        
+        $this->response($message, 200);        
     }
     
     function view_get()
@@ -85,6 +83,7 @@ class Api extends Oauth_Controller
 	    			'geo_lat'		=> $this->input->post('geo_lat'),
 	    			'geo_long'		=> $this->input->post('geo_long'),
 	    			'geo_accuracy'	=> $this->input->post('geo_accuracy'),
+	    			'viewed'		=> 'N',
 	    			'status'		=> $status  			
 	        	);
 	        	
@@ -94,6 +93,70 @@ class Api extends Oauth_Controller
 				if ($result)
 				{
 		        	$message = array('status' => 'success', 'data' => $result, 'receivers' => $receiver);
+		        }
+		        else
+		        {
+			        $message = array('status' => 'error', 'message' => 'Oops unable to send your message');
+		        }
+			}
+			else
+			{
+		        $message = array('status' => 'error', 'message' => 'The person you are trying to message does not exist');
+			}
+		}
+		else 
+		{	
+	        $message = array('status' => 'error', 'message' => 'Hrmm '.validation_errors());
+		}			
+
+        $this->response($message, 200);
+    }
+
+    function reply_authd_post()
+    {
+		$this->form_validation->set_rules('message', 'Message', 'required');
+
+		// Validation
+		if ($this->form_validation->run() == true)
+		{			
+			$message = $this->messages_igniter->get_message($this->get('id'));
+			
+			if ($message)
+			{
+				// Site (will need to revise later
+				if (!$this->input->post('site_id')) $site_id = config_item('site_id');
+				else $site_id = $this->input->post('site_id');	
+				
+				// Receiver
+				if ($message->sender_id == $this->oauth_user_id) $receiver_id = $message->receiver_id;
+				else $receiver_id = $message->sender_id;
+				
+				// Viewed State
+				if ($receiver_id == $this->oauth_user_id) $viewed = 'Y';
+				else $viewed = 'N';
+			
+	        	$message_data = array(
+	    			'site_id'		=> $site_id,
+	        		'reply_to_id'	=> $message->message_id,
+	    			'receiver_id'	=> $receiver_id,	
+					'sender_id'		=> $this->oauth_user_id,
+					'module'		=> $this->input->post('module'),
+	    			'type'			=> $this->input->post('type'),
+	    			'subject'		=> $message->subject,
+	    			'message'		=> $this->input->post('message'),
+	    			'geo_lat'		=> $this->input->post('geo_lat'),
+	    			'geo_long'		=> $this->input->post('geo_long'),
+	    			'geo_accuracy'	=> $this->input->post('geo_accuracy'),
+	    			'viewed'		=> $viewed,
+	    			'status'		=> 'P'  			
+	        	);
+	        	
+				// Insert
+			    $result = $this->messages_igniter->add_message($message_data);
+	
+				if ($result)
+				{
+		        	$message = array('status' => 'success', 'data' => $result);
 		        }
 		        else
 		        {
@@ -131,7 +194,7 @@ class Api extends Oauth_Controller
     {
         if ($this->messages_igniter->update_message_value(array('message_id' => $this->get('id'), 'status' => 'P')))
         {
-            $message = array('status' => 'success', 'message' => 'Message sent');
+            $message = array('status' => 'success', 'message' => 'Message was sent');
         }
         else
         {
