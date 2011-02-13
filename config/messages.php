@@ -21,6 +21,4 @@ $config['messages_display_style']	= array(
 $config['messages_notifications_method'] = array(
 	'none'			=> 'None',
 	'email'			=> 'Email',
-	'push'			=> 'PUSH',
-	'email_push'	=> 'Email & PUSH'
 );

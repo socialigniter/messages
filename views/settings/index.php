@@ -25,12 +25,8 @@
 	
 	<h3>Notifications</h3>	
 
-	<p>Allow
-	<?= form_dropdown('notifications_allow', config_item('yes_or_no'), $settings['messages']['notifications_allow']) ?>	
-	</p>
-
-	<p>Method
-	<?= form_dropdown('notifications_method', config_item('messages_notifications_method'), $settings['messages']['notifications_method']) ?>
+	<p>Email
+	<?= form_dropdown('notifications_email', config_item('enable_disable'), $settings['messages']['notifications_email']) ?>	
 	</p>
 
 	<input type="hidden" name="module" value="messages">

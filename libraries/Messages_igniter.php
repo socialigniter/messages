@@ -77,24 +77,39 @@ class Messages_igniter
 	{		
 		if ($message_id = $this->ci->messages_model->add_message($message_data))
 		{
-			$message = $this->get_message($message_id);
-		
-			$email_data = array(
-				'message_id'		=> $message->message_id,
-				'message_subject'	=> $message->subject, 
-				'message_message'	=> $message->message,
-				'message_profile'	=> base_url().'profile/'.$message->username,
-				'message_sender'	=> $message->name
-			);
-		
-			$email_message = $this->ci->load->view('../modules/messages/views/emails/message', $email_data, true);
-
-			$this->ci->email->set_newline("\r\n");
-			$this->ci->email->from($message->email, $message->name);
-			$this->ci->email->to($message->email);
-			$this->ci->email->subject($message->subject);
-			$this->ci->email->message($email_message);
-			$this->ci->email->send();
+			$message	= $this->get_message($message_id);
+			
+			// If email is enabeled
+			if (config_item('messages_notifications_email') == 'TRUE')
+			{
+				$receiver	= $this->ci->social_auth->get_user($message_data['receiver_id']);
+	
+				if ($message->reply_to_id)
+				{
+					$message_id_link = $message->reply_to_id;
+				}
+				else
+				{
+					$message_id_link = $message->message_id;
+				}
+				
+				$email_data = array(
+					'message_id'		=> $message_id_link,
+					'message_subject'	=> $message->subject,
+					'message_message'	=> $message->message,
+					'message_profile'	=> base_url().'profile/'.$message->username,
+					'message_sender'	=> $message->name
+				);
+			
+				$email_message = $this->ci->load->view('../modules/messages/views/emails/message', $email_data, true);
+	
+				$this->ci->email->set_newline("\r\n");
+				$this->ci->email->from(config_item('site_admin_email'), $message->name.' at '.config_item('site_title'));
+				$this->ci->email->to($receiver->email);
+				$this->ci->email->subject($message->subject);
+				$this->ci->email->message($email_message);
+				$this->ci->email->send();
+			}
 		
 			return $message;
 		}

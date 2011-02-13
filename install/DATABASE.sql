@@ -22,5 +22,4 @@ CREATE TABLE `messages` (
 INSERT INTO `settings` VALUES(NULL, 1, 'messages', 'enabled', 'TRUE');
 INSERT INTO `settings` VALUES(NULL, 1, 'messages', 'display_style', 'linear');
 INSERT INTO `settings` VALUES(NULL, 1, 'messages', 'date_style', 'DIGITS');
-INSERT INTO `settings` VALUES(NULL, 1, 'messages', 'notifications_allow', 'TRUE');
-INSERT INTO `settings` VALUES(NULL, 1, 'messages', 'notifications_method', 'NONE');
+INSERT INTO `settings` VALUES(NULL, 1, 'messages', 'notifications_email', 'TRUE');
