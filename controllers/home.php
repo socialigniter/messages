@@ -41,7 +41,7 @@ class Home extends Dashboard_Controller
 			{		
 				$this->data['message_id'] 			= $message->message_id;
 				$this->data['message_viewed']		= item_viewed('item', $message->viewed);
-				$this->data['message_avatar']		= $this->social_igniter->profile_image($message->user_id, $message->image, $message->email);
+				$this->data['message_avatar']		= $this->social_igniter->profile_image($message->user_id, $message->image, $message->gravatar);
 				$this->data['message_userlink']		= base_url().'profile/'.$message->username;
 				$this->data['message_user']			= $message->name;
 
@@ -97,7 +97,7 @@ class Home extends Dashboard_Controller
 			$this->data['message_thread_id']	= $messages_base->message_id;
 			$this->data['message_id']			= $messages_base->message_id;
 			$this->data['message_subject']		= $messages_base->subject;		
-			$this->data['message_avatar']		= $this->social_igniter->profile_image($messages_base->user_id, $messages_base->image, $messages_base->email);
+			$this->data['message_avatar']		= $this->social_igniter->profile_image($messages_base->user_id, $messages_base->image, $messages_base->gravatar);
 			$this->data['message_userlink']		= base_url().'profile/'.$messages_base->username;
 			$this->data['message_user']			= $messages_base->name;
 			$this->data['message_message']		= $messages_base->message;
@@ -112,7 +112,7 @@ class Home extends Dashboard_Controller
 				if (($message->receiver_id == $this->session->userdata('user_id')) && ($message->viewed == 'N')) $this->messages_igniter->update_message_value(array('message_id' => $message->message_id, 'viewed' => 'Y'));
 
 				$this->data['message_id'] 			= $message->message_id;
-				$this->data['message_avatar']		= $this->social_igniter->profile_image($message->user_id, $message->image, $message->email);
+				$this->data['message_avatar']		= $this->social_igniter->profile_image($message->user_id, $message->image, $message->gravatar);
 				$this->data['message_userlink']		= base_url().'profile/'.$message->username;
 				$this->data['message_user']			= $message->name;
 
@@ -141,7 +141,7 @@ class Home extends Dashboard_Controller
 	function compose()
 	{		
 		$this->data['wysiwyg']	 			= $this->load->view($this->config->item('dashboard_theme').'/partials/wysiwyg', $this->data, true);
-		$this->data['users'] 				= $this->social_auth->get_users();
+		$this->data['users'] 				= $this->social_auth->get_users('active', 1);
 
  		$this->data['sub_title']			= 'Compose';
 			
