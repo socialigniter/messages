@@ -13,6 +13,7 @@
 */
 
 // Messages Settings
+$config['messages_path']			= 'messsages/';
 $config['messages_display_style']	= array(
 	'linear'	=> 'Linear',
 	'threaded'	=> 'Threaded'

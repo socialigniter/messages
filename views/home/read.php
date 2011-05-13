@@ -15,7 +15,6 @@
 		<textarea name="message" id="message_read_reply_message" class="textarea_large" rows="4"></textarea>
 		<input type="hidden" name="geo_lat" id="geo_lat" value="" />
 		<input type="hidden" name="geo_long" id="geo_long" value="" />
-		<input type="hidden" name="geo_accuracy" id="geo_accuracy" value="" />
 		<input type="submit" name="reply" value="Reply" />
 	</form>
 	<div class="clear"></div>

@@ -11,15 +11,9 @@ CREATE TABLE `messages` (
   `attachments` text COLLATE utf8_unicode_ci,
   `geo_lat` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `geo_long` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `geo_accuracy` varchar(8) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,  
   `viewed` char(1) COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` char(8) COLLATE utf8_unicode_ci DEFAULT NULL,
   `sent_at` datetime DEFAULT '0000-00-00 00:00:00',
   `opened_at` datetime DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`message_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0 ;
-
-INSERT INTO `settings` VALUES(NULL, 1, 'messages', 'enabled', 'TRUE');
-INSERT INTO `settings` VALUES(NULL, 1, 'messages', 'display_style', 'linear');
-INSERT INTO `settings` VALUES(NULL, 1, 'messages', 'date_style', 'DIGITS');
-INSERT INTO `settings` VALUES(NULL, 1, 'messages', 'notifications_email', 'TRUE');

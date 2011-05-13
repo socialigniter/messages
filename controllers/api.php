@@ -41,12 +41,12 @@ class Api extends Oauth_Controller
 	{	
 		if ($message_count = $this->messages_igniter->get_inbox_new_count($this->oauth_user_id))
 		{
-         	$messages = array('status' => 'success', 'message' => $message_count);	
+         	$messages = array('status' => 'success', 'message' => 'New messages found', 'data' => $message_count);	
 		}
 		else
 		{
-         	$messages = array('status' => 'error', 'message' => $message_count);			
-		}
+         	$messages = array('status' => 'error', 'message' => 'New messages found', 'data' => $message_count);			
+		}	
 
         $this->response($messages, 200);
 	}
@@ -61,7 +61,7 @@ class Api extends Oauth_Controller
 		// Validation
 		if ($this->form_validation->run() == true)
 		{			
-			$receiver = $this->social_auth->get_user($this->input->post('receiver_id'));
+			$receiver = $this->social_auth->get_user('user_id', $this->input->post('receiver_id'));
 			
 			if (!$this->input->post('site_id')) $site_id = config_item('site_id');
 			else 								$site_id = $this->input->post('site_id');
@@ -82,7 +82,6 @@ class Api extends Oauth_Controller
 	    			'message'		=> $this->input->post('message'),
 	    			'geo_lat'		=> $this->input->post('geo_lat'),
 	    			'geo_long'		=> $this->input->post('geo_long'),
-	    			'geo_accuracy'	=> $this->input->post('geo_accuracy'),
 	    			'viewed'		=> 'N',
 	    			'status'		=> $status  			
 	        	);
@@ -92,7 +91,7 @@ class Api extends Oauth_Controller
 	
 				if ($result)
 				{
-		        	$message = array('status' => 'success', 'data' => $result, 'receivers' => $receiver);
+		        	$message = array('status' => 'success', 'message' => 'Message sent to', 'data' => $result, 'receivers' => $receiver);
 		        }
 		        else
 		        {
@@ -106,7 +105,7 @@ class Api extends Oauth_Controller
 		}
 		else 
 		{	
-	        $message = array('status' => 'error', 'message' => 'Hrmm '.validation_errors());
+	        $message = array('status' => 'error', 'message' => validation_errors());
 		}			
 
         $this->response($message, 200);
@@ -146,7 +145,6 @@ class Api extends Oauth_Controller
 	    			'message'		=> $this->input->post('message'),
 	    			'geo_lat'		=> $this->input->post('geo_lat'),
 	    			'geo_long'		=> $this->input->post('geo_long'),
-	    			'geo_accuracy'	=> $this->input->post('geo_accuracy'),
 	    			'viewed'		=> $viewed,
 	    			'status'		=> 'P'  			
 	        	);
@@ -156,7 +154,7 @@ class Api extends Oauth_Controller
 	
 				if ($result)
 				{
-		        	$message = array('status' => 'success', 'data' => $result);
+		        	$message = array('status' => 'success', 'message' => 'Message was sent', 'data' => $result);
 		        }
 		        else
 		        {
@@ -170,13 +168,13 @@ class Api extends Oauth_Controller
 		}
 		else 
 		{	
-	        $message = array('status' => 'error', 'message' => 'Hrmm '.validation_errors());
+	        $message = array('status' => 'error', 'message' => validation_errors());
 		}			
 
         $this->response($message, 200);
     }
     
-    function viewed_authd_put()
+    function viewed_authd_get()
 	{
         if ($this->messages_igniter->update_message_value(array('message_id' => $this->get('id'), 'viewed' => 'Y')))
         {
@@ -190,7 +188,7 @@ class Api extends Oauth_Controller
         $this->response($message, 200);
     }   
     
-    function send_authd_put()
+    function send_authd_get()
     {
         if ($this->messages_igniter->update_message_value(array('message_id' => $this->get('id'), 'status' => 'P')))
         {
@@ -204,12 +202,9 @@ class Api extends Oauth_Controller
         $this->response($message, 200);
     }     
       
-    function destroy_delete()
+    function destroy_get()
     {		
-		// Make sure user has access to do this func
-		$access = $this->social_tools->has_access_to_modify('comment', $this->get('id'));
-    	
-    	if ($access)
+    	if ( $this->social_auth->has_access_to_modify('message', $this->get('id')))
         {   
         	$this->social_tools->delete_message($this->get('id'));
         	        
