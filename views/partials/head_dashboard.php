@@ -54,7 +54,7 @@ $(document).ready(function()
 		{
 			oauth 		: user_data,		
 			url			: item_url,
-			type		: 'PUT',
+			type		: 'GET',
 			dataType	: 'json',
 		  	success		: function(result)
 		  	{		  	

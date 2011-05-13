@@ -11,7 +11,6 @@ class Messages_model extends CI_Model
  		$this->db->select('*');
  		$this->db->from('messages');    
  		$this->db->join('users', 'messages.sender_id = users.user_id'); 				
- 		$this->db->join('users_meta', 'messages.sender_id = users_meta.user_id');	
  		$this->db->join('sites', 'messages.site_id = sites.site_id');
 		$this->db->where('messages.message_id', $message_id);
  		$result = $this->db->get()->row();	
@@ -23,7 +22,6 @@ class Messages_model extends CI_Model
  		$this->db->select('*');
  		$this->db->from('messages');    
  		$this->db->join('users', 'messages.sender_id = users.user_id'); 				
- 		$this->db->join('users_meta', 'messages.sender_id = users_meta.user_id');	
  		$this->db->join('sites', 'messages.site_id = sites.site_id');
 		$this->db->where('messages.reply_to_id', $reply_to_id);
 		$this->db->order_by('messages.sent_at', 'asc');
@@ -36,7 +34,6 @@ class Messages_model extends CI_Model
  		$this->db->select('*');
  		$this->db->from('messages');    
  		$this->db->join('users', 'messages.sender_id = users.user_id'); 				
- 		$this->db->join('users_meta', 'messages.sender_id = users_meta.user_id');		
  		$this->db->join('sites', 'messages.site_id = sites.site_id');
 		$this->db->where('messages.receiver_id', $receiver_id);
 		$this->db->where('messages.status', 'P');
@@ -50,7 +47,6 @@ class Messages_model extends CI_Model
  		$this->db->select('*');
  		$this->db->from('messages');    
  		$this->db->join('users', 'messages.receiver_id = users.user_id');
- 		$this->db->join('users_meta', 'messages.receiver_id = users_meta.user_id');
  		$this->db->join('sites', 'messages.site_id = sites.site_id'); 		
 		$this->db->where('messages.sender_id', $sender_id);
 		$this->db->where('messages.status', 'P');
@@ -64,7 +60,6 @@ class Messages_model extends CI_Model
  		$this->db->select('*');
  		$this->db->from('messages');
  		$this->db->join('users', 'messages.receiver_id = users.user_id');
- 		$this->db->join('users_meta', 'messages.receiver_id = users_meta.user_id');
  		$this->db->join('sites', 'messages.site_id = sites.site_id'); 								
 		$this->db->where('messages.sender_id', $receiver_id);
 		$this->db->where('messages.status', 'S');
