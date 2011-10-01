@@ -73,16 +73,16 @@ class Messages_igniter
 		return $this->ci->messages_model->get_inbox_new_count($receiver_id);
 	}
 
-	function add_message($message_data)
+	function add_message($message_data, $receiver=FALSE)
 	{		
 		if ($message_id = $this->ci->messages_model->add_message($message_data))
 		{
-			$message	= $this->get_message($message_id);
+			$message = $this->get_message($message_id);
 			
 			// If email is enabeled
 			if (config_item('messages_notifications_email') == 'TRUE')
 			{
-				$receiver	= $this->ci->social_auth->get_user($message_data['receiver_id']);
+				if (!$receiver) $receiver = $this->ci->social_auth->get_user('user_id', $message_data['receiver_id']);
 	
 				if ($message->reply_to_id)
 				{

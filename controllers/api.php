@@ -87,11 +87,11 @@ class Api extends Oauth_Controller
 	        	);
 	        	
 				// Insert
-			    $result = $this->messages_igniter->add_message($message_data);
+			    $result = $this->messages_igniter->add_message($message_data, $receiver);
 	
 				if ($result)
 				{
-		        	$message = array('status' => 'success', 'message' => 'Message sent to', 'data' => $result, 'receivers' => $receiver);
+		        	$message = array('status' => 'success', 'message' => 'Message sent to', 'data' => $result, 'receiver' => $receiver);
 		        }
 		        else
 		        {
