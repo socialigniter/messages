@@ -50,7 +50,7 @@ $(document).ready(function()
 		var item_id				= item_attr_array[3];
 		var item_url			= base_url + 'api/messages/send/id/' + item_id;
 				
-		$(this).oauthAjax(
+		$.oauthAjax(
 		{
 			oauth 		: user_data,		
 			url			: item_url,

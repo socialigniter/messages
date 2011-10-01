@@ -39,7 +39,7 @@ $(document).ready(function()
 			var message_data = $('#message_compose').serializeArray();
 			message_data.push({'name':'module','value':'messages'},{'name':'type','value':'message'});
 
-			$(this).oauthAjax(
+			$.oauthAjax(
 			{
 				oauth 		: user_data,
 				url			: base_url + 'api/messages/compose',

@@ -38,7 +38,7 @@ $(document).ready(function()
 			var message_data = $('#message_read_reply_form').serializeArray();
 			message_data.push({'name':'module','value':'messages'},{'name':'type','value':'message'});
 
-			$(this).oauthAjax(
+			$.oauthAjax(
 			{
 				oauth 		: user_data,
 				url			: base_url + 'api/messages/reply/id/<?= $message_thread_id ?>',
