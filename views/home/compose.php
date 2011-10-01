@@ -41,7 +41,7 @@ $(document).ready(function()
 			
 			console.log(message_data);
 
-			$(this).oauthAjax(
+			$.oauthAjax(
 			{
 				oauth 		: user_data,
 				url			: base_url + 'api/messages/compose',
