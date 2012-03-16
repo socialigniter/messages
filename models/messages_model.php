@@ -10,7 +10,7 @@ class Messages_model extends CI_Model
     {
  		$this->db->select('*');
  		$this->db->from('messages');    
- 		$this->db->join('users', 'messages.sender_id = users.user_id'); 				
+ 		$this->db->join('users', 'messages.sender_id = users.user_id', 'left'); 				
  		$this->db->join('sites', 'messages.site_id = sites.site_id');
 		$this->db->where('messages.message_id', $message_id);
  		$result = $this->db->get()->row();	
@@ -33,7 +33,7 @@ class Messages_model extends CI_Model
     {
  		$this->db->select('*');
  		$this->db->from('messages');    
- 		$this->db->join('users', 'messages.sender_id = users.user_id'); 				
+ 		$this->db->join('users', 'messages.sender_id = users.user_id', 'left'); 				
  		$this->db->join('sites', 'messages.site_id = sites.site_id');
 		$this->db->where('messages.receiver_id', $receiver_id);
 		$this->db->where('messages.status', 'P');

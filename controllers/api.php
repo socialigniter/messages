@@ -324,4 +324,34 @@ class Api extends Oauth_Controller
 
         $this->response($message, 200);        
     }
+    
+    function mailgun_post()
+    {
+
+    	$message_data = array(
+			'site_id'		=> config_item('site_id'),
+    		'reply_to_id'	=> 0,
+			'receiver_id'	=> 1,
+			'receiver'		=> $this->input->post('recipient'),	
+			'sender_id'		=> 0,
+			'sender'		=> $this->input->post('sender'),
+			'from'			=> $this->input->post('from'),
+			'module'		=> 'messages',
+			'type'			=> 'email',
+			'subject'		=> $this->input->post('subject'),
+			'message'		=> $this->input->post('body-plain'),
+			'body_html'		=> $this->input->post('body-html'),
+			'stripped_html'	=> $this->input->post('stripped-html'),
+			'geo_lat'		=> $this->input->post('geo_lat'),
+			'geo_long'		=> $this->input->post('geo_long'),
+			'attachments_count'	=> $this->input->post('geo_long'),
+			'attachments'	=> $this->input->post('attachment-x'),
+			'viewed'		=> 'N',
+			'status'		=> 'P',
+			'timestamp'		=> $this->input->post('timestamp')
+    	);
+    	
+		// Insert
+	    $result = $this->messages_model->add_message($message_data);    	
+    }
 }
