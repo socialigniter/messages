@@ -38,6 +38,8 @@ $(document).ready(function()
 		{	
 			var message_data = $('#message_compose').serializeArray();
 			message_data.push({'name':'module','value':'messages'},{'name':'type','value':'message'});
+			
+			console.log(message_data);
 
 			$.oauthAjax(
 			{
