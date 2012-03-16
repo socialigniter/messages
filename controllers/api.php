@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 /* 
- * Messages API : Module : Social-Igniter
+ * Messages API : App : Social-Igniter
  *
  */
 class Api extends Oauth_Controller
@@ -11,6 +11,113 @@ class Api extends Oauth_Controller
         
 		$this->load->library('messages_igniter');            
 	}
+	
+    /* Install App */
+	function install_get()
+	{
+		// Load
+		$this->load->library('installer');
+		$this->load->config('install');        
+		$this->load->dbforge();
+
+		// Settings & Create Folders
+		$settings = $this->installer->install_settings('messages', config_item('messages_settings'));
+
+		// Create Messages Table
+		$this->dbforge->add_key('message_id', TRUE);
+		$this->dbforge->add_field(array(
+			'message_id' => array(
+				'type' 					=> 'INT',
+				'constraint' 			=> 16,
+				'unsigned' 				=> TRUE,
+				'auto_increment'		=> TRUE
+			),
+			'site_id' => array(
+				'type' 					=> 'INT',
+				'constraint' 			=> '6',
+				'null'					=> TRUE
+			),
+			'reply_to_id' => array(
+				'type' 					=> 'INT',
+				'constraint'			=> 16,
+				'null' 					=> TRUE
+			),
+			'receiver_id' => array(
+				'type'					=> 'INT',
+				'constraint'			=> 16,
+				'null'					=> TRUE
+			),
+			'sender_id' => array(
+				'type'					=> 'INT',
+				'constraint'			=> 16,
+				'null'					=> TRUE
+			),
+			'module' => array(
+				'type'					=> 'VARCHAR',
+				'constraint'			=> 32,
+				'null'					=> TRUE
+			),
+			'type' => array(
+				'type'					=> 'VARCHAR',
+				'constraint'			=> 32,
+				'null'					=> TRUE
+			),
+			'subject' => array(
+				'type'					=> 'VARCHAR',
+				'constraint'			=> 255,
+				'null'					=> TRUE
+			),
+			'message' => array(
+				'type'					=> 'TEXT',
+				'null'					=> TRUE
+			),
+			'attachments' => array(
+				'type'					=> 'TEXT',
+				'null'					=> TRUE
+			),
+			'geo_lat' => array(
+				'type'					=> 'VARCHAR',
+				'constraint'			=> 16,
+				'null'					=> TRUE
+			),
+			'geo_long' => array(
+				'type'					=> 'VARCHAR',
+				'constraint'			=> 16,
+				'null'					=> TRUE
+			),
+			'viewed' => array(
+				'type'					=> 'CHAR',
+				'constraint'			=> 1,
+				'null'					=> TRUE
+			),			
+			'status' => array(
+				'type'					=> 'CHAR',
+				'constraint'			=> 8,
+				'null'					=> TRUE
+			),
+			'sent_at' => array(
+				'type'					=> 'DATETIME',
+				'default'				=> '9999-12-31 00:00:00'
+			),
+			'opened_at' => array(
+				'type'					=> 'DATETIME',
+				'default'				=> '9999-12-31 00:00:00'
+			)			
+		));
+
+		$this->dbforge->create_table('messages');
+
+		if ($settings == TRUE)
+		{
+            $message = array('status' => 'success', 'message' => 'Yay, the Messages App was installed');
+        }
+        else
+        {
+            $message = array('status' => 'error', 'message' => 'Dang Messages App could not be uninstalled');
+        }		
+		
+		$this->response($message, 200);
+	} 	
 	
     function all_get()
     {

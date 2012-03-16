@@ -23,6 +23,3 @@ $config['messages_notifications_method'] = array(
 	'none'			=> 'None',
 	'email'			=> 'Email',
 );
-
-
-$config['postmark_api_key'] = "";
