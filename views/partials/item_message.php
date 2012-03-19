@@ -7,7 +7,7 @@
 	</div>
 
 	<div class="item_message_read_message">
-		<?= $message_message ?>		
+		<?= item_linkify($message_message) ?>		
 	</div>
 
 	<div class="clear"></div>

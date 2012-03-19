@@ -100,7 +100,10 @@ class Home extends Dashboard_Controller
 			$this->data['message_avatar']		= $this->social_igniter->profile_image($messages_base->user_id, $messages_base->image, $messages_base->gravatar);
 			$this->data['message_userlink']		= base_url().'profile/'.$messages_base->username;
 			$this->data['message_user']			= $messages_base->name;
-			$this->data['message_message']		= item_linkify($messages_base->message);
+			
+			if ($messages_base->stripped_html != '') $this->data['message_message'] = strip_tags($messages_base->stripped_html, '<img><b><strong><i><em><p><a><br>');
+			else $this->data['message_message']	= $messages_base->message;
+
 			$this->data['message_sent_date']	= format_datetime(config_item('messages_date_style'), $messages_base->sent_at);
 		
 			$messages_thread		= $this->messages_igniter->get_message_replies($messages_base->message_id);			
