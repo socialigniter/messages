@@ -28,3 +28,42 @@ function item_alerts_message($message, $mailbox)
 
 	return $message_alerts;
 }
+
+
+function parse_email($whole_string) 
+{
+    preg_match("/<?([^<]+?)@([^>]+?)>?$/", $whole_string, $matches);
+
+    return $matches[1] . "@" . $matches[2];
+}
+
+
+function parse_email_and_name($string, $value=FALSE)
+{
+	// Has Bracket (thus name)
+    if (strpos($string, '<'))
+    {
+    	$string = str_replace('"', '', $string);
+        preg_match('!(.*?)\s?<\s*(.*?)\s*>!', $string, $matches);
+        
+        $result = array(
+            'email'	=> $matches[2],
+            'name'	=> $matches[1]
+        );
+    } 
+    else
+    {
+        $result = array(
+            'email' => $string,
+            'name'	=> 'No Name'
+        );
+    }
+
+	// Return Specific Value	    
+    if ($value)
+    {
+    	$result = $result[$value];
+    }    
+
+    return $result;
+}

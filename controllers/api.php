@@ -327,6 +327,10 @@ class Api extends Oauth_Controller
     
     function mailgun_post()
     {
+    	$from = $this->input->post('from');
+    
+    	$from_email	= parse_email_and_name($from, 'email'); 
+    	$from_name	= parse_email_and_name($from, 'name');
 
     	$message_data = array(
 			'site_id'		=> config_item('site_id'),
@@ -335,7 +339,7 @@ class Api extends Oauth_Controller
 			'receiver'		=> $this->input->post('recipient'),	
 			'sender_id'		=> 0,
 			'sender'		=> $this->input->post('sender'),
-			'from'			=> $this->input->post('from'),
+			'from'			=> $from_email,
 			'module'		=> 'messages',
 			'type'			=> 'email',
 			'subject'		=> $this->input->post('subject'),
