@@ -76,10 +76,13 @@ class Home extends Dashboard_Controller
 	 	{
 	 		$mailbox_view = '<li>No messages in '.ucwords($this->uri->segment(3)).'</li>';
  		}
+ 		
+ 		// Categories
+ 		$this->data['folders']		= $this->social_tools->make_categories_dropdown(array('module' => 'messages', 'type' => 'folder'), $this->session->userdata('user_id'), $this->session->userdata('user_level_id'), '+ Add Folder');
 
 		// Output
 		$this->data['mailbox_view'] = $mailbox_view;
-		$this->render();
+		$this->render('dashboard_wide');
 	}
 	
 	function read()

@@ -37,6 +37,11 @@ class Api extends Oauth_Controller
 				'constraint' 			=> '6',
 				'null'					=> TRUE
 			),
+			'category_id' => array(
+				'type' 					=> 'INT',
+				'constraint' 			=> '6',
+				'null'					=> TRUE
+			)
 			'reply_to_id' => array(
 				'type' 					=> 'INT',
 				'constraint'			=> 16,
@@ -327,6 +332,9 @@ class Api extends Oauth_Controller
     
     function mailgun_post()
     {
+    	
+    
+    
     	$from = $this->input->post('from');
     
     	$from_email	= parse_email_and_name($from, 'email'); 
