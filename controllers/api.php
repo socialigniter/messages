@@ -336,7 +336,7 @@ class Api extends Oauth_Controller
     	$folders 		= $this->social_tools->get_categories_view('module', 'messages');
     	$filters		= array(); // Query users_meta & use that to store user specific filters! Also need "global filters"
     	$category_id	= 0;
-    	$recipient		= $this->get('id'); //$this->input->post('recipient'));
+    	$recipient		= $this->input->post('recipient'));
     	$check_flags	= messages_check_for_flags($recipient);
 		$to_email		= str_replace($check_flags.'+', '', $recipient);
 
