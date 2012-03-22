@@ -76,8 +76,13 @@ class Messages_model extends CI_Model
     
     function add_message($message_data)
     {
-		$message_data['sent_at']	= unix_to_mysql(now());
-		$message_data['opened_at']	= unix_to_mysql(now());
+    	if (!isset($message_data['sent_at']))
+    	{
+			$message_data['sent_at'] = unix_to_mysql(now());
+		}
+
+		$message_data['opened_at'] = unix_to_mysql(now());
+
 		$this->db->insert('messages', $message_data);
 		return $this->db->insert_id();
     }

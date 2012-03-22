@@ -77,7 +77,7 @@ class Home extends Dashboard_Controller
 	 		$mailbox_view = '<li>No messages in '.ucwords($this->uri->segment(3)).'</li>';
  		}
  		
- 		// Categories
+ 		// Folders
  		$this->data['folders']		= $this->social_tools->make_categories_dropdown(array('module' => 'messages', 'type' => 'folder'), $this->session->userdata('user_id'), $this->session->userdata('user_level_id'), '+ Add Folder');
 
 		// Output
@@ -137,11 +137,14 @@ class Home extends Dashboard_Controller
 	 	{
 			redirect(base_url().'home/messages/inbox');
  		}
+ 		
+  		// Folders
+ 		$this->data['folders']		= $this->social_tools->make_categories_dropdown(array('module' => 'messages', 'type' => 'folder'), $this->session->userdata('user_id'), $this->session->userdata('user_level_id'), '+ Add Folder');		
 
 		// Output		
 		$this->data['message_thread']		= $messages_thread_view;		
 	
-		$this->render();
+		$this->render('dashboard_wide');
 	}
 	
 	function compose()
@@ -150,8 +153,11 @@ class Home extends Dashboard_Controller
 		$this->data['users'] 				= $this->social_auth->get_users('active', 1);
 
  		$this->data['sub_title']			= 'Compose';
+ 		
+ 		// Folders
+ 		$this->data['folders']		= $this->social_tools->make_categories_dropdown(array('module' => 'messages', 'type' => 'folder'), $this->session->userdata('user_id'), $this->session->userdata('user_level_id'), '+ Add Folder'); 		
 			
-		$this->render();
+		$this->render('dashboard_wide');
 	}
 	
 	/* Partials */

@@ -7,9 +7,10 @@ class Api extends Oauth_Controller
 {
     function __construct()
     {
-        parent::__construct();  
-        
-		$this->load->library('messages_igniter');            
+        parent::__construct();
+
+        $this->load->helper('messages');
+		$this->load->library('messages_igniter');
 	}
 	
     /* Install App */
@@ -41,7 +42,7 @@ class Api extends Oauth_Controller
 				'type' 					=> 'INT',
 				'constraint' 			=> '6',
 				'null'					=> TRUE
-			)
+			),
 			'reply_to_id' => array(
 				'type' 					=> 'INT',
 				'constraint'			=> 16,
@@ -329,23 +330,66 @@ class Api extends Oauth_Controller
 
         $this->response($message, 200);        
     }
-    
+
     function mailgun_post()
     {
-    	
-    
-    
-    	$from = $this->input->post('from');
-    
-    	$from_email	= parse_email_and_name($from, 'email'); 
-    	$from_name	= parse_email_and_name($from, 'name');
+    	$folders 		= $this->social_tools->get_categories_view('module', 'messages');
+    	$filters		= array(); // Query users_meta & use that to store user specific filters! Also need "global filters"
+    	$category_id	= 0;
+    	$recipient		= $this->get('id'); //$this->input->post('recipient'));
+    	$check_flags	= messages_check_for_flags($recipient);
+		$to_email		= str_replace($check_flags.'+', '', $recipient);
 
+    	// 'To' User
+    	if ($to_user = $this->social_auth->get_user('email', $to_email)) $receiver_id = $to_user->user_id;
+    	else $receiver_id = config_item('superadmin_user_id');
+    	
+
+    	// 'From'
+    	$from 			= $this->input->post('from');
+    	$from_email		= parse_email_and_name($from, 'email');
+    	$from_name		= parse_email_and_name($from, 'name');
+		$filter_id		= messages_check_for_filters($filters, $from_email);
+
+
+    	// 'From' User
+    	if ($from_user = $this->social_auth->get_user('email', $from_email)) $sender_id = $from_user->user_id;
+    	else $sender_id = 0;
+
+
+   		// Process Category	
+    	foreach ($folders as $folder)
+    	{
+    		// Check flag+ (maybe check for flag@ in the future OR better even both)
+    		if ($folder->category_url == $check_flags)
+    		{
+    			$category_id = $folder->category_id;
+    			break;
+    		}
+    		
+    		// Do Global, then Personal Filters
+    		if ($folder->category_id == $filter_id)
+    		{
+    		
+    		}
+    	}
+/*
+		echo 'to_email: '.$to_email.'<br>';		
+    	echo 'category_id: '.$category_id.'<br>';
+		echo 'receiver_id: '.$receiver_id.'<br>';
+		echo 'sender_id: '.$sender_id.'<br>';
+    	echo '<pre>';
+    	print_r($to_user);
+    	print_r($folders);
+    	die();
+*/
     	$message_data = array(
 			'site_id'		=> config_item('site_id'),
+    		'category_id'	=> $category_id,
     		'reply_to_id'	=> 0,
-			'receiver_id'	=> 1,
+			'receiver_id'	=> $receiver_id,
 			'receiver'		=> $this->input->post('recipient'),	
-			'sender_id'		=> 0,
+			'sender_id'		=> $sender_id,
 			'sender'		=> $this->input->post('sender'),
 			'from'			=> $from_email,
 			'module'		=> 'messages',
@@ -356,11 +400,11 @@ class Api extends Oauth_Controller
 			'stripped_html'	=> $this->input->post('stripped-html'),
 			'geo_lat'		=> $this->input->post('geo_lat'),
 			'geo_long'		=> $this->input->post('geo_long'),
-			'attachments_count'	=> $this->input->post('geo_long'),
+			'attachments_count'	=> $this->input->post('attachment-count'),
 			'attachments'	=> $this->input->post('attachment-x'),
 			'viewed'		=> 'N',
 			'status'		=> 'P',
-			'timestamp'		=> $this->input->post('timestamp')
+			'sent_at'		=>  unix_to_mysql($this->input->post('timestamp'))
     	);
     	
 		// Insert

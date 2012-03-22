@@ -67,3 +67,27 @@ function parse_email_and_name($string, $value=FALSE)
 
     return $result;
 }
+
+// Checks an email address for 'flag' by looking for + symbol
+function messages_check_for_flags($email)
+{
+	// Should in future check for flag-root@domain.com not just flag+email@domain.com ???
+	$flag	= '';
+	$check	= explode('+', $email);
+
+	if ($check)
+	{
+		$flag = $check[0];
+	}
+
+	return $flag;
+}
+
+// Checks 
+function messages_check_for_filters($filters, $email)
+{
+	// Should in future check for flag-root@domain.com not just flag+email@domain.com
+	$filter_id = 0;
+
+	return $filter_id;
+}
