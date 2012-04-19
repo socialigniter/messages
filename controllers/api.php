@@ -26,92 +26,15 @@ class Api extends Oauth_Controller
 
 		// Create Messages Table
 		$this->dbforge->add_key('message_id', TRUE);
-		$this->dbforge->add_field(array(
-			'message_id' => array(
-				'type' 					=> 'INT',
-				'constraint' 			=> 16,
-				'unsigned' 				=> TRUE,
-				'auto_increment'		=> TRUE
-			),
-			'site_id' => array(
-				'type' 					=> 'INT',
-				'constraint' 			=> '6',
-				'null'					=> TRUE
-			),
-			'category_id' => array(
-				'type' 					=> 'INT',
-				'constraint' 			=> '6',
-				'null'					=> TRUE
-			),
-			'reply_to_id' => array(
-				'type' 					=> 'INT',
-				'constraint'			=> 16,
-				'null' 					=> TRUE
-			),
-			'receiver_id' => array(
-				'type'					=> 'INT',
-				'constraint'			=> 16,
-				'null'					=> TRUE
-			),
-			'sender_id' => array(
-				'type'					=> 'INT',
-				'constraint'			=> 16,
-				'null'					=> TRUE
-			),
-			'module' => array(
-				'type'					=> 'VARCHAR',
-				'constraint'			=> 32,
-				'null'					=> TRUE
-			),
-			'type' => array(
-				'type'					=> 'VARCHAR',
-				'constraint'			=> 32,
-				'null'					=> TRUE
-			),
-			'subject' => array(
-				'type'					=> 'VARCHAR',
-				'constraint'			=> 255,
-				'null'					=> TRUE
-			),
-			'message' => array(
-				'type'					=> 'TEXT',
-				'null'					=> TRUE
-			),
-			'attachments' => array(
-				'type'					=> 'TEXT',
-				'null'					=> TRUE
-			),
-			'geo_lat' => array(
-				'type'					=> 'VARCHAR',
-				'constraint'			=> 16,
-				'null'					=> TRUE
-			),
-			'geo_long' => array(
-				'type'					=> 'VARCHAR',
-				'constraint'			=> 16,
-				'null'					=> TRUE
-			),
-			'viewed' => array(
-				'type'					=> 'CHAR',
-				'constraint'			=> 1,
-				'null'					=> TRUE
-			),			
-			'status' => array(
-				'type'					=> 'CHAR',
-				'constraint'			=> 8,
-				'null'					=> TRUE
-			),
-			'sent_at' => array(
-				'type'					=> 'DATETIME',
-				'default'				=> '9999-12-31 00:00:00'
-			),
-			'opened_at' => array(
-				'type'					=> 'DATETIME',
-				'default'				=> '9999-12-31 00:00:00'
-			)			
-		));
-
+		$this->dbforge->add_field(config_item('database_messages_messages_table'));
 		$this->dbforge->create_table('messages');
+
+		
+		// Create Responses Table
+		$this->dbforge->add_key('response_id', TRUE);
+		$this->dbforge->add_field(config_item('database_messages_responses_table'));
+		$this->dbforge->create_table('responses');
+
 
 		if ($settings == TRUE)
 		{
@@ -317,7 +240,7 @@ class Api extends Oauth_Controller
       
     function destroy_get()
     {		
-    	if ( $this->social_auth->has_access_to_modify('message', $this->get('id')))
+    	if ($this->social_auth->has_access_to_modify('message', $this->get('id')))
         {   
         	$this->social_tools->delete_message($this->get('id'));
         	        
@@ -336,7 +259,7 @@ class Api extends Oauth_Controller
     	$folders 		= $this->social_tools->get_categories_view('module', 'messages');
     	$filters		= array(); // Query users_meta & use that to store user specific filters! Also need "global filters"
     	$category_id	= 0;
-    	$recipient		= $this->input->post('recipient'));
+    	$recipient		= $this->input->post('recipient');
     	$check_flags	= messages_check_for_flags($recipient);
 		$to_email		= str_replace($check_flags.'+', '', $recipient);
 
@@ -410,4 +333,25 @@ class Api extends Oauth_Controller
 		// Insert
 	    $result = $this->messages_model->add_message($message_data);    	
     }
+
+	    
+	function create_response_authd_post()
+	{		
+		$result = $this->get('id');
+	
+		if ($result)
+	    {           	        
+	    	$message = array('status' => 'success', 'message' => 'Yay', 'data' => $data);
+	    }
+	    else
+	    {
+	        $message = array('status' => 'error', 'message' => 'Nay');
+	    }
+	
+	    $this->response($message, 200);        
+	}    
+	
+
+    
+    
 }

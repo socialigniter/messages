@@ -9,6 +9,9 @@ class Home extends Dashboard_Controller
 		$this->load->library('messages_igniter');
 
 		$this->data['page_title']	= 'Messages';
+		
+ 		// Folders
+ 		$this->data['folders'] = $this->social_tools->make_categories_dropdown(array('module' => 'messages', 'type' => 'folder'), $this->session->userdata('user_id'), $this->session->userdata('user_level_id'), '+ Add Folder');		
     }
  
  	function mailbox()
@@ -76,9 +79,6 @@ class Home extends Dashboard_Controller
 	 	{
 	 		$mailbox_view = '<li>No messages in '.ucwords($this->uri->segment(3)).'</li>';
  		}
- 		
- 		// Folders
- 		$this->data['folders']		= $this->social_tools->make_categories_dropdown(array('module' => 'messages', 'type' => 'folder'), $this->session->userdata('user_id'), $this->session->userdata('user_level_id'), '+ Add Folder');
 
 		// Output
 		$this->data['mailbox_view'] = $mailbox_view;
@@ -137,9 +137,6 @@ class Home extends Dashboard_Controller
 	 	{
 			redirect(base_url().'home/messages/inbox');
  		}
- 		
-  		// Folders
- 		$this->data['folders']		= $this->social_tools->make_categories_dropdown(array('module' => 'messages', 'type' => 'folder'), $this->session->userdata('user_id'), $this->session->userdata('user_level_id'), '+ Add Folder');		
 
 		// Output		
 		$this->data['message_thread']		= $messages_thread_view;		
@@ -153,10 +150,14 @@ class Home extends Dashboard_Controller
 		$this->data['users'] 				= $this->social_auth->get_users('active', 1);
 
  		$this->data['sub_title']			= 'Compose';
- 		
- 		// Folders
- 		$this->data['folders']		= $this->social_tools->make_categories_dropdown(array('module' => 'messages', 'type' => 'folder'), $this->session->userdata('user_id'), $this->session->userdata('user_level_id'), '+ Add Folder'); 		
-			
+		
+		$this->render('dashboard_wide');
+	}
+
+	function responses()
+	{
+		
+	
 		$this->render('dashboard_wide');
 	}
 	

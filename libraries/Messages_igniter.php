@@ -48,24 +48,24 @@ class Messages_igniter
 		return $this->ci->messages_model->get_message($message_id);
 	}
 
-	function get_message_replies($reply_to_id)
+	function get_message_replies($reply_to_id, $limit=50)
 	{
-		return $this->ci->messages_model->get_message_replies($reply_to_id);
+		return $this->ci->messages_model->get_message_replies($reply_to_id, $limit);
 	}
 		
-	function get_inbox($user_id)
+	function get_inbox($user_id, $limit=50)
 	{
-		return $this->ci->messages_model->get_inbox($user_id);
+		return $this->ci->messages_model->get_inbox($user_id, $limit);
 	}
 
-	function get_sent($sender_id)
+	function get_sent($sender_id, $limit=50)
 	{
-		return $this->ci->messages_model->get_sent($sender_id);
+		return $this->ci->messages_model->get_sent($sender_id, $limit);
 	}
 	
-	function get_drafts($sender_id)
+	function get_drafts($sender_id, $limit=50)
 	{
-		return $this->ci->messages_model->get_drafts($sender_id);
+		return $this->ci->messages_model->get_drafts($sender_id, $limit);
 	}
 
 	function get_inbox_new_count($receiver_id)

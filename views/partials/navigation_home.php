@@ -7,6 +7,7 @@
 	<?= navigation_list_btn('home/messages/sent', 'Sent', $this->uri->segment(4)) ?>
 	<?= navigation_list_btn('home/messages/drafts', 'Drafts', $this->uri->segment(4)) ?>
 	<?= navigation_list_btn('home/messages/compose', 'Compose') ?>
+	<?= navigation_list_btn('home/messages/responses', 'Responses') ?>
 </ul>
 
 <script type="text/javascript">

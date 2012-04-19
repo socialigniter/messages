@@ -29,7 +29,7 @@ class Messages_model extends CI_Model
  		return $result->result();    
     } 
     
-    function get_inbox($receiver_id)
+    function get_inbox($receiver_id, $limit)
     {
  		$this->db->select('*');
  		$this->db->from('messages');    
@@ -38,11 +38,12 @@ class Messages_model extends CI_Model
 		$this->db->where('messages.receiver_id', $receiver_id);
 		$this->db->where('messages.status', 'P');
 		$this->db->order_by('sent_at', 'desc'); 
+		$this->db->limit($limit);
  		$result = $this->db->get();	
  		return $result->result();	      	
     }
  
-    function get_sent($sender_id)
+    function get_sent($sender_id, $limit)
     {
  		$this->db->select('*');
  		$this->db->from('messages');    
@@ -50,12 +51,13 @@ class Messages_model extends CI_Model
  		$this->db->join('sites', 'messages.site_id = sites.site_id'); 		
 		$this->db->where('messages.sender_id', $sender_id);
 		$this->db->where('messages.status', 'P');
-		$this->db->order_by('sent_at', 'desc');		
+		$this->db->order_by('sent_at', 'desc');
+		$this->db->limit($limit);			
  		$result = $this->db->get();	
  		return $result->result();	      	
     }    
 
-    function get_drafts($receiver_id)
+    function get_drafts($receiver_id, $limit)
     {
  		$this->db->select('*');
  		$this->db->from('messages');
@@ -63,7 +65,8 @@ class Messages_model extends CI_Model
  		$this->db->join('sites', 'messages.site_id = sites.site_id'); 								
 		$this->db->where('messages.sender_id', $receiver_id);
 		$this->db->where('messages.status', 'S');
-		$this->db->order_by('sent_at', 'desc');		
+		$this->db->order_by('sent_at', 'desc');	
+		$this->db->limit($limit);			
  		$result = $this->db->get();	
  		return $result->result();	      	
     }
@@ -98,4 +101,5 @@ class Messages_model extends CI_Model
 		$this->db->update('messages', $message_data);
 		return $this->db->get_where('messages', array('message_id' => $message_data['message_id']))->row();		
     }
+    
 }
