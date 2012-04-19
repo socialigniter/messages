@@ -334,10 +334,13 @@ class Api extends Oauth_Controller
 	    $result = $this->messages_model->add_message($message_data);    	
     }
 
-	    
+	 
+	/* Responses */   
 	function create_response_authd_post()
 	{		
-		$result = $this->get('id');
+		$this->load->model('responses_model');
+	
+		$response = $this->responses_model->();
 	
 		if ($result)
 	    {           	        

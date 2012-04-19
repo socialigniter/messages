@@ -42,7 +42,39 @@ $(document).ready(function()
 				create	: function()
 				{
 					$parent_dialog = $(this);
-					// Do Custom Things
+
+					$('#wysiwyg_response').wysiwyg(
+					{	
+						autoGrow: true,
+						resizeOptions: { maxWidth : 500, minWidth : 500, minHeight : 300 },
+						controls:
+						{
+							separator				: { visible : false },
+							strikeThrough			: { visible : true },
+							underline 				: { visible : true },
+							justifyLeft				: { visible : true },
+							justifyCenter			: { visible : true },
+							justifyRight			: { visible : true },
+							justifyFull				: { visible : false },
+							indent					: { visible : false },
+							outdent					: { visible : false },
+							subscript				: { visible : false },
+							superscript				: { visible : false },
+							undo					: { visible : false },
+							redo					: { visible : false },
+							insertImage				: { visible : false },
+							insertOrderedList		: { visible : false },
+							insertUnorderedList		: { visible : false },
+							insertHorizontalRule	: { visible : false },
+							cut						: { visible	: false },
+							copy					: { visible : false },
+							paste					: { visible : false },
+							html					: { visible : true }	
+						}
+					});
+
+
+
 				},
 				buttons	:
 				{

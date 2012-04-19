@@ -6,27 +6,27 @@ class Responses_model extends CI_Model
         parent::__construct();
     }
     
-    function get_content($content_id)
+    function get_response($response_id)
     {
  		$this->db->select('*');
- 		$this->db->from('content');  
-  		$this->db->join('users', 'users.user_id = content.user_id');		  
- 		$this->db->where('content_id', $content_id);
+ 		$this->db->from('responses');  
+  		$this->db->join('users', 'users.user_id = responses.user_id');		  
+ 		$this->db->where('response_id', $response_id);
 		$this->db->limit(1);    
  		$result = $this->db->get()->row();	
  		return $result;
     }   
 
-    function get_content_view($parameter, $value, $status, $limit)
+    function get_responses_view($parameter, $value, $status, $limit)
     {
- 		if (in_array($parameter, array('site_id','parent_id','category_id', 'module','type','user_id', 'details')))
+ 		if (in_array($parameter, array('user_id','access_value')))
     	{
-	 		$this->db->select('content.*, users.username, users.gravatar, users.name, users.image');
-	 		$this->db->from('content');
- 			$this->db->join('users', 'users.user_id = content.user_id');
-	 		$this->db->where('content.'.$parameter, $value);
+	 		$this->db->select('responses.*, users.username, users.gravatar, users.name, users.image');
+	 		$this->db->from('responses');
+ 			$this->db->join('users', 'users.user_id = responses.user_id');
+	 		$this->db->where('responses.'.$parameter, $value);
 			$this->db->limit($limit); 		
-	 		$this->db->order_by('content.created_at', 'desc');
+	 		$this->db->order_by('responses.created_at', 'desc');
 	 		$result = $this->db->get();	
 	 		return $result->result();	      
 		}
@@ -36,48 +36,48 @@ class Responses_model extends CI_Model
 		}
     }
 
-    function get_content_multiple($parameter, $value_array)
+    function get_responses_multiple($parameter, $value_array)
     {
- 		$this->db->select('content.*, users.username, users.gravatar, users.name, users.image');
- 		$this->db->from('content');
-  		$this->db->join('users', 'users.user_id = content.user_id');
+ 		$this->db->select('responses.*, users.username, users.gravatar, users.name, users.image');
+ 		$this->db->from('responses');
+  		$this->db->join('users', 'users.user_id = responses.user_id');
  		$this->db->or_where_in($parameter, $value_array);	 	
-	 	$this->db->where('content.status !=', 'D');
+	 	$this->db->where('responses.status !=', 'D');
  		$result = $this->db->get();	
  		return $result->result();
     } 
     
-    function add_content($content_data)
+    function add_responses($response_data)
     {
- 		$content_data = array(
+ 		$response_data = array(
 			'created_at' 		=> unix_to_mysql(now()),
 			'updated_at' 		=> unix_to_mysql(now())
 		);
 		
-		$insert = $this->db->insert('content', $content_data);
+		$insert = $this->db->insert('responses', $response_data);
 		
-		if ($content_id = $this->db->insert_id())
+		if ($response_id = $this->db->insert_id())
 		{
-			return $content_id;	
+			return $response_id;	
     	}
     	
     	return FALSE;
     }
 
 
-    function update_content($content_data)
+    function update_response($response_data)
     {
- 		$content_data['updated_at'] = unix_to_mysql(now());
+ 		$response_data['updated_at'] = unix_to_mysql(now());
  		
-		$this->db->where('content_id', $content_data['content_id']);
-		$this->db->update('content', $content_data);
-		return $this->db->get_where('content', array('content_id' => $content_data['content_id']))->row();		
+		$this->db->where('response_id', $response_data['response_id']);
+		$this->db->update('responses', $response_data);
+		return $this->db->get_where('responses', array('response_id' => $response_data['response_id']))->row();		
     }
 
-    function delete_content($content_id)
+    function delete_response($response_id)
     {
-    	$this->db->where('content_id', $content_id);
-    	$this->db->delete('content'); 
+    	$this->db->where('response_id', $response_id);
+    	$this->db->delete('responses'); 
 		return TRUE;
     }         
     
