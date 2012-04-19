@@ -256,7 +256,7 @@ class Api extends Oauth_Controller
 
     function mailgun_post()
     {
-    	$folders 		= $this->social_tools->get_categories_view('module', 'messages');
+    	$folders 		= $this->social_tools->get_categories_view_multiple(array('module' => 'messages', 'type' => 'folder'));
     	$filters		= array(); // Query users_meta & use that to store user specific filters! Also need "global filters"
     	$category_id	= 0;
     	$recipient		= $this->input->post('recipient');
@@ -311,7 +311,7 @@ class Api extends Oauth_Controller
     		'category_id'	=> $category_id,
     		'reply_to_id'	=> 0,
 			'receiver_id'	=> $receiver_id,
-			'receiver'		=> $this->input->post('recipient'),	
+			'receiver'		=> $to_email,	
 			'sender_id'		=> $sender_id,
 			'sender'		=> $this->input->post('sender'),
 			'from'			=> $from_email,

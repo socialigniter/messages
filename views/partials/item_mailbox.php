@@ -9,7 +9,7 @@
 	
 	<div class="item_message_mailbox_col_2">
 		<span class="item_message_subject"><a href="<?= $message_read ?>"><?= $message_subject ?></a></span>
-		<span class="item_message_meta"><?= $message_message ?></span>		
+		<span class="item_message_meta"><?= $message_message ?></span>
 	</div>
 	
 	<span class="item_alerts" id="message_alerts_<?= $message_id ?>"><?= $message_alerts ?></span>
