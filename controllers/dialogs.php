@@ -12,6 +12,8 @@ class Dialogs extends MY_Controller
 	
 	function response_manager()
 	{
+		$this->data['heading']				= '';
+	
 		// Key Details
 		$this->data['wysiwyg_name']			= 'response';
 		$this->data['wysiwyg_id']			= 'wysiwyg_response';
@@ -24,8 +26,9 @@ class Dialogs extends MY_Controller
 		$this->data['wysiwyg_value']		= '';
 		$this->data['wysiwyg_response']		= $this->load->view($this->config->item('dashboard_theme').'/partials/wysiwyg', $this->data, true);
 
-		$this->data['access'] 			= 'FALSE';
-		$this->data['access_value']		= '';
+		$this->data['access'] 				= 'O';
+		$this->data['access_value']			= '';
+		$this->data['status']				= 'P';
 	
 		$this->load->view('dialogs/response_manager', $this->data);	
 	}

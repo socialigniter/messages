@@ -340,11 +340,20 @@ class Api extends Oauth_Controller
 	{		
 		$this->load->model('responses_model');
 	
-		$response = $this->responses_model->();
+		$response_data = array(
+			'user_id' 		=> $this->oauth_user_id,
+			'heading'		=> $this->input->post('heading'),
+			'response'		=> $this->input->post('response'),
+			'access'		=> $this->input->post('access'),
+			'access_value'	=> $this->input->post('access_value'),
+			'status'		=> $this->input->post('status')
+		);
 	
-		if ($result)
+		$response = $this->responses_model->add_response($response_data);
+	
+		if ($response)
 	    {           	        
-	    	$message = array('status' => 'success', 'message' => 'Yay', 'data' => $data);
+	    	$message = array('status' => 'success', 'message' => 'Yay', 'response' => $response);
 	    }
 	    else
 	    {

@@ -3,13 +3,21 @@
 	<input type="button" id="create_response" data-action_type="Add" value="Add Response">	
 	<span class="item_separator"></span>
 	<div class="clear"></div>
-	
+
 
 	<ul>
-		<li>List of responses</li>
-		<li>More response</li>
-	</ul>	
-	
+
+		<li class="item_data" id="item_">
+			<span class="occurrence_location"><strong>Trackers Homestead</strong> is the coolest most exciting place on the planet to go and do anything I can't imagine anywhere cooler</span>
+			<ul class="item_actions">
+				<li><a href="#" data-object_id="2" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>
+				<li><a href="#" data-object_id="2" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>
+			</ul>
+			<div class="clear"></div>
+		</li>
+
+	</ul>
+
 </div>
 <div id="content_wide_toolbar">
 	<h2>Actions</h2>
@@ -21,6 +29,9 @@
 	<p>These will be actions that get triggered by various message events, e.g. signatures, autoresponders<p>
 </div>
 <div class="clear"></div>
+
+<link rel="stylesheet" href="<?= base_url() ?>css/wysiwyg.css" type="text/css" />
+<script type="text/javascript" src="<?= base_url() ?>js/jquery.wysiwyg.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function()
@@ -43,6 +54,7 @@ $(document).ready(function()
 				{
 					$parent_dialog = $(this);
 
+					// WYSIWYG					
 					$('#wysiwyg_response').wysiwyg(
 					{	
 						autoGrow: true,
@@ -80,18 +92,19 @@ $(document).ready(function()
 				{
 					'Save':function()
 					{
-						var data = $('#form_name').serializeArray();
-						data.push({'name':'module','value':'widgets'});
+						var response_data = $('#response_editor').serializeArray();
 	
 						 $.oauthAjax(
 						 {
-							oauth 	: user_data,
-							url		: base_url + 'api/messages/create_reponse',
+							oauth 		: user_data,
+							url			: base_url + 'api/messages/create_response',
 							type		: 'POST',
 							dataType	: 'json',
-							data		: data,
+							data		: response_data,
 						  	success	: function(result)
-						  	{							  	
+						  	{				
+						  		console.log(result);
+						  				  	
 								$('#content_message').notify({scroll:true,status:result.status,message:result.message});									
 								$parent_dialog.dialog('close');
 						  	}		
@@ -107,6 +120,30 @@ $(document).ready(function()
 	});
 
 
+	$('.edit_item').bind('click', function(e)
+	{
+		
+		e.preventDefault();
+	
+		var item_id = $(this).data('object_id');
+		
+		console.log(item_id);
+	
+		alert('Edit bizzle ' + item_id);
+	
+	});
+
+
+	$('.delete_item').bind('click', function(e)
+	{
+		
+		e.preventDefault();
+	
+		alert('Delete shizzle');
+	
+	});
+
+	/* Actions */
 	$('#create_action').bind('click', function(e)
 	{
 	

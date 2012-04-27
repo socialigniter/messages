@@ -47,13 +47,10 @@ class Responses_model extends CI_Model
  		return $result->result();
     } 
     
-    function add_responses($response_data)
+    function add_response($response_data)
     {
- 		$response_data = array(
-			'created_at' 		=> unix_to_mysql(now()),
-			'updated_at' 		=> unix_to_mysql(now())
-		);
-		
+ 		$response_data['created_at'] = unix_to_mysql(now());
+
 		$insert = $this->db->insert('responses', $response_data);
 		
 		if ($response_id = $this->db->insert_id())

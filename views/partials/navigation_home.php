@@ -13,6 +13,7 @@
 <script type="text/javascript">
 $(document).ready(function()
 {
+
 	// Add Category
 	$('#select_folder').categoryManager(
 	{
@@ -21,5 +22,6 @@ $(document).ready(function()
 		type		: 'folder',
 		title		: 'Add Folder'
 	});
+	
 });
 </script>
