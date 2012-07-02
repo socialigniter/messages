@@ -9,7 +9,8 @@ class Home extends Dashboard_Controller
 		$this->load->library('messages_igniter');
 
 		$this->data['page_title']	= 'Messages';
-		
+		$this->data['response_list'] = $this->list_response();		
+
  		// Folders
  		$this->data['folders'] = $this->social_tools->make_categories_dropdown(array('module' => 'messages', 'type' => 'folder'), $this->session->userdata('user_id'), $this->session->userdata('user_level_id'), '+ Add Folder');		
     }
@@ -157,6 +158,7 @@ class Home extends Dashboard_Controller
 		
 	
 		$this->render('dashboard_wide');
+		$this->data['query'] = $this->db->get('responses');
 	}
 	
 	/* Partials */
@@ -178,6 +180,15 @@ class Home extends Dashboard_Controller
 		echo trim(strip_tags(html_entity_decode($messages_base->stripped_html), '<p><a><b><strong><em><i><img><div>'));
 
 	}
+
+	/* List Responses */
+        function list_response()
+        {	
+	$this->load->model('responses_model');	
+	$response_list =  $this->responses_model->get_responses_kg();
+	return $response_list; 
+	}
+
 	
 
 }

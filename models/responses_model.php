@@ -36,16 +36,18 @@ class Responses_model extends CI_Model
 		}
     }
 
-    function get_responses_multiple($parameter, $value_array)
+    //function get_responses_multiple($parameter, $value_array)
+    function get_responses_kg()
     {
  		$this->db->select('responses.*, users.username, users.gravatar, users.name, users.image');
  		$this->db->from('responses');
   		$this->db->join('users', 'users.user_id = responses.user_id');
- 		$this->db->or_where_in($parameter, $value_array);	 	
+ 		//$this->db->or_where_in($parameter, $value_array);	 	
 	 	$this->db->where('responses.status !=', 'D');
  		$result = $this->db->get();	
  		return $result->result();
     } 
+
     
     function add_response($response_data)
     {

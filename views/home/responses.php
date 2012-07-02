@@ -1,4 +1,20 @@
 <div id="content_wide_content">
+<h2>Response List</h2>
+        <ul>
+<?php  foreach ($response_list as $item):?>
+                <li class="item_data" id="item_">
+                        <span class="occurrence_location">
+<?php echo $item->heading?> | <?php echo $item->access_value?></span>
+                        <ul class="item_actions">
+                                <li><a href="#" id="edit_item" data-object_id="<?php echo $item->response_id?>" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>
+                                <li><a href="#" id="delete_item" data-object_id="<?php echo $item->response_id?>" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>
+                        </ul>
+<?php endforeach;?>
+</ul>
+
+
+
+<hr>
 	<h2>Responses</h2>
 	<input type="button" id="create_response" data-action_type="Add" value="Add Response">	
 	<span class="item_separator"></span>
@@ -122,24 +138,58 @@ $(document).ready(function()
 
 	$('.edit_item').bind('click', function(e)
 	{
-		
 		e.preventDefault();
-	
 		var item_id = $(this).data('object_id');
-		
-		console.log(item_id);
+						var response_data = $('#response_editor').serializeArray();
 	
-		alert('Edit bizzle ' + item_id);
+						 $.oauthAjax(
+						 {
+							oauth 		: user_data,
+							url			: base_url + 'api/messages/update_resp',
+							type		: 'POST',
+							dataType	: 'json',
+							data		: response_data,
+						  	success	: function(result)
+						  	{				
+						  		console.log(result);
+						  				  	
+								$('#content_response').notify({scroll:true,status:result.status,message:result.message});									
+								$parent_dialog.dialog('close');
+						  	}		
+						});
+	
+		
+	
+	//	console.log(item_id);
+	
+	//	alert('Edit bizzle ' + item_id);
 	
 	});
 
 
-	$('.delete_item').bind('click', function(e)
+	$('#delete_item').bind('click', function(e)
 	{
-		
 		e.preventDefault();
+		var item_id = $(this).data('object_id');
+						var response_data = $('#').serializeArray();
 	
-		alert('Delete shizzle');
+						 $.oauthAjax(
+						 {
+							oauth 		: user_data,
+							url			: base_url + 'api/messages/destrores',
+							type		: 'POST',
+							dataType	: 'json',
+							data		: response_data,
+						  	success	: function(result)
+						  	{				
+						  		console.log(result);
+						  				  	
+								$('#content_message').notify({scroll:true,status:result.status,message:result.message});									
+								$parent_dialog.dialog('close');
+						  	}		
+						});
+		
+	//	alert('Delete shizzle');
 	
 	});
 
