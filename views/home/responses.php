@@ -135,11 +135,10 @@ $(document).ready(function()
 		});		
 	});
 
-
+/* **KMG
 	$('.edit_item').bind('click', function(e)
 	{
 		e.preventDefault();
-		var item_id = $(this).data('object_id');
 						var response_data = $('#response_editor').serializeArray();
 	
 						 $.oauthAjax(
@@ -153,7 +152,7 @@ $(document).ready(function()
 						  	{				
 						  		console.log(result);
 						  				  	
-								$('#content_response').notify({scroll:true,status:result.status,message:result.message});									
+								$('#content_message').notify({scroll:true,status:result.status,message:result.message});									
 								$parent_dialog.dialog('close');
 						  	}		
 						});
@@ -166,20 +165,19 @@ $(document).ready(function()
 	
 	});
 
-
+*/
 	$('#delete_item').bind('click', function(e)
 	{
 		e.preventDefault();
-		var item_id = $(this).data('object_id');
-						var response_data = $('#').serializeArray();
+						var item_id = $(this).data('object_id');
 	
 						 $.oauthAjax(
 						 {
 							oauth 		: user_data,
-							url			: base_url + 'api/messages/destrores',
+							url			: base_url + 'api/messages/destroyresponse',
 							type		: 'POST',
 							dataType	: 'json',
-							data		: response_data,
+							data		: item_id,
 						  	success	: function(result)
 						  	{				
 						  		console.log(result);
