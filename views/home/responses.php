@@ -1,5 +1,10 @@
 <div id="content_wide_content">
-<h2>Response List</h2>
+
+<hr>
+	<h2>Responses</h2>
+	<input type="button" id="create_response" data-action_type="Add" value="Add Response">	
+	<span class="item_separator"></span>
+	<div class="clear"></div>
         <ul>
 <?php  foreach ($response_list as $item):?>
                 <li class="item_data" id="item_">
@@ -10,25 +15,7 @@
                                 <li><a href="#" id="delete_item" data-object_id="<?php echo $item->response_id?>" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>
                         </ul>
 <?php endforeach;?>
-</ul>
 
-
-
-<hr>
-	<h2>Responses</h2>
-	<input type="button" id="create_response" data-action_type="Add" value="Add Response">	
-	<span class="item_separator"></span>
-	<div class="clear"></div>
-
-
-	<ul>
-
-		<li class="item_data" id="item_">
-			<span class="occurrence_location"><strong>Trackers Homestead</strong> is the coolest most exciting place on the planet to go and do anything I can't imagine anywhere cooler</span>
-			<ul class="item_actions">
-				<li><a href="#" data-object_id="2" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>
-				<li><a href="#" data-object_id="2" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>
-			</ul>
 			<div class="clear"></div>
 		</li>
 
