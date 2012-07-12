@@ -1,10 +1,8 @@
 <div id="content_wide_content">
-
 	<h2>Responses</h2>
 	<input type="button" id="create_response" data-action_type="Add" value="Add Response">	
 	<span class="item_separator"></span>
 	<div class="clear"></div>
-
 	<ul id="responses">
 		<?php foreach ($response_list as $item):?>
 		<li class="item_data" id="item_<?= $item->response_id ?>">
@@ -16,7 +14,6 @@
 		</li>
 		<?php endforeach;?>
 	</ul>
-
 </div>
 <div id="content_wide_toolbar">
 	<h2>Actions</h2>
