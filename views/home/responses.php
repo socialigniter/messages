@@ -8,7 +8,7 @@
 	<ul id="responses">
 		<?php foreach ($response_list as $item):?>
 		<li class="item_data" id="item_<?= $item->response_id ?>">
-			<span class="occurrence_location"><?= $item->heading?> | <?= $item->access_value?></span>
+			<span class="occurrence_location"><?= $item->heading?> | <?= character_limiter(strip_tags($item->response), 55) ?></span>
 			<ul class="item_actions">
 				<li><a href="#" id="edit_item" data-response_id="<?= $item->response_id?>" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>
 				<li><a href="#" id="delete_item" data-response_id="<?= $item->response_id?>" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>
@@ -102,7 +102,7 @@ $(document).ready(function()
 						  		console.log(result);
 						  		
 								$('#responses').append('<li class="item_data" id="item_' + result.response.response_id + '">\
-									<span class="occurrence_location">' + result.response.heading + ' | </span>\
+									<span class="occurrence_location">' + result.response.heading + ' | ' + $(result.response.response).text() + '</span>\
 									<ul class="item_actions">\
 										<li><a href="#" id="edit_item" data-response_id="' + result.response.response_id + '" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>\
 										<li><a href="#" id="delete_item" data-response_id="' + result.response.response_id + '" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>\
