@@ -8,7 +8,7 @@ class Responses_model extends CI_Model
     
     function get_response($response_id)
     {
- 		$this->db->select('*');
+ 		$this->db->select('responses.*, users.username, users.gravatar, users.name, users.image');
  		$this->db->from('responses');  
   		$this->db->join('users', 'users.user_id = responses.user_id');		  
  		$this->db->where('response_id', $response_id);
@@ -36,17 +36,16 @@ class Responses_model extends CI_Model
 		}
     }
 
-    //function get_responses_multiple($parameter, $value_array)
-    function get_responses_kg()
+    function get_responses($parameter, $value_array)
     {
  		$this->db->select('responses.*, users.username, users.gravatar, users.name, users.image');
  		$this->db->from('responses');
   		$this->db->join('users', 'users.user_id = responses.user_id');
- 		//$this->db->or_where_in($parameter, $value_array);	 	
+ 		$this->db->or_where_in($parameter, $value_array);	 	
 	 	$this->db->where('responses.status !=', 'D');
  		$result = $this->db->get();	
  		return $result->result();
-    } 
+    }
 
     
     function add_response($response_data)
@@ -57,7 +56,8 @@ class Responses_model extends CI_Model
 		
 		if ($response_id = $this->db->insert_id())
 		{
-			return $response_id;	
+			$response = $this->get_response($response_id);
+			return $response;
     	}
     	
     	return FALSE;

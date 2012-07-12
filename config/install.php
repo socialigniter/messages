@@ -18,6 +18,7 @@ $config['messages_settings']['display_style'] 		= 'linear';
 $config['messages_settings']['date_style']			= 'DIGITS';
 $config['messages_settings']['notifications_email']	= 'TRUE';
 
+/* Database Table */
 $config['database_messages_messages_table'] = array(
 'message_id' => array(
 	'type' 					=> 'INT',

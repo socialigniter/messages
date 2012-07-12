@@ -1,37 +1,20 @@
 <div id="content_wide_content">
-<h2>Response List</h2>
-        <ul>
-<?php  foreach ($response_list as $item):?>
-                <li class="item_data" id="item_">
-                        <span class="occurrence_location">
-<?php echo $item->heading?> | <?php echo $item->access_value?></span>
-                        <ul class="item_actions">
-                                <li><a href="#" id="edit_item" data-object_id="<?php echo $item->response_id?>" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>
-                                <li><a href="#" id="delete_item" data-object_id="<?php echo $item->response_id?>" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>
-                        </ul>
-<?php endforeach;?>
-</ul>
 
-
-
-<hr>
 	<h2>Responses</h2>
 	<input type="button" id="create_response" data-action_type="Add" value="Add Response">	
 	<span class="item_separator"></span>
 	<div class="clear"></div>
 
-
-	<ul>
-
-		<li class="item_data" id="item_">
-			<span class="occurrence_location"><strong>Trackers Homestead</strong> is the coolest most exciting place on the planet to go and do anything I can't imagine anywhere cooler</span>
+	<ul id="responses">
+		<?php foreach ($response_list as $item):?>
+		<li class="item_data" id="item_<?= $item->response_id ?>">
+			<span class="occurrence_location"><?= $item->heading?> | <?= $item->access_value?></span>
 			<ul class="item_actions">
-				<li><a href="#" data-object_id="2" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>
-				<li><a href="#" data-object_id="2" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>
+				<li><a href="#" id="edit_item" data-response_id="<?= $item->response_id?>" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>
+				<li><a href="#" id="delete_item" data-response_id="<?= $item->response_id?>" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>
 			</ul>
-			<div class="clear"></div>
 		</li>
-
+		<?php endforeach;?>
 	</ul>
 
 </div>
@@ -100,9 +83,6 @@ $(document).ready(function()
 							html					: { visible : true }	
 						}
 					});
-
-
-
 				},
 				buttons	:
 				{
@@ -120,7 +100,15 @@ $(document).ready(function()
 						  	success	: function(result)
 						  	{				
 						  		console.log(result);
-						  				  	
+						  		
+								$('#responses').append('<li class="item_data" id="item_' + result.response.response_id + '">\
+									<span class="occurrence_location">' + result.response.heading + ' | </span>\
+									<ul class="item_actions">\
+										<li><a href="#" id="edit_item" data-response_id="' + result.response.response_id + '" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>\
+										<li><a href="#" id="delete_item" data-response_id="' + result.response.response_id + '" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>\
+									</ul>\
+								</li>');
+  	
 								$('#content_message').notify({scroll:true,status:result.status,message:result.message});									
 								$parent_dialog.dialog('close');
 						  	}		
@@ -135,37 +123,30 @@ $(document).ready(function()
 		});		
 	});
 
-/* **KMG
+
 	$('.edit_item').bind('click', function(e)
 	{
 		e.preventDefault();
-						var response_data = $('#response_editor').serializeArray();
+		var response_data = $('#response_editor').serializeArray();
 	
-						 $.oauthAjax(
-						 {
-							oauth 		: user_data,
-							url			: base_url + 'api/messages/update_resp',
-							type		: 'POST',
-							dataType	: 'json',
-							data		: response_data,
-						  	success	: function(result)
-						  	{				
-						  		console.log(result);
-						  				  	
-								$('#content_message').notify({scroll:true,status:result.status,message:result.message});									
-								$parent_dialog.dialog('close');
-						  	}		
-						});
-	
-		
-	
-	//	console.log(item_id);
-	
-	//	alert('Edit bizzle ' + item_id);
-	
+		 $.oauthAjax(
+		 {
+			oauth 		: user_data,
+			url			: base_url + 'api/messages/update_resp',
+			type		: 'POST',
+			dataType	: 'json',
+			data		: response_data,
+		  	success	: function(result)
+		  	{				
+		  		console.log(result);
+					  	
+				$('#content_message').notify({scroll:true,status:result.status,message:result.message});									
+				$parent_dialog.dialog('close');
+		  	}		
+		});	
 	});
 
-*/
+
 	$('#delete_item').bind('click', function(e)
 	{
 		e.preventDefault();

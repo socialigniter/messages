@@ -28,7 +28,6 @@ class Api extends Oauth_Controller
 		$this->dbforge->add_key('message_id', TRUE);
 		$this->dbforge->add_field(config_item('database_messages_messages_table'));
 		$this->dbforge->create_table('messages');
-
 		
 		// Create Responses Table
 		$this->dbforge->add_key('response_id', TRUE);
@@ -334,10 +333,10 @@ class Api extends Oauth_Controller
 	    $result = $this->messages_model->add_message($message_data);    	
     }
 
-	 
-	/* Responses */   
+
+	/* Responses */
 	function create_response_authd_post()
-	{		
+	{
 		$this->load->model('responses_model');
 	
 		$response_data = array(
