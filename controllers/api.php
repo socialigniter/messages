@@ -341,7 +341,6 @@ class Api extends Oauth_Controller
 	
 		$response_data = array(
 			'user_id' 		=> $this->oauth_user_id,
-			'heading'		=> $this->input->post('heading'),
 			'response'		=> $this->input->post('response'),
 			'access'		=> $this->input->post('access'),
 			'access_value'	=> $this->input->post('access_value'),
@@ -352,17 +351,38 @@ class Api extends Oauth_Controller
 	
 		if ($response)
 	    {           	        
-	    	$message = array('status' => 'success', 'message' => 'Yay', 'response' => $response);
+	    	$message = array('status' => 'success', 'message' => 'Yay created response', 'response' => $response);
 	    }
 	    else
 	    {
-	        $message = array('status' => 'error', 'message' => 'Nay');
+	        $message = array('status' => 'error', 'message' => 'Dang, could not create response');
 	    }
 	
 	    $this->response($message, 200);        
 	}    
 	
+	function modify_response_authd_post()
+	{
+		$this->load->model('responses_model');
+	
+		$response_data = array(
+			'response'		=> $this->input->post('response'),
+			'access'		=> $this->input->post('access'),
+			'access_value'	=> $this->input->post('access_value'),
+			'status'		=> $this->input->post('status')
+		);
 
+		if ($response = $this->responses_model->update_response($this->get('id'), $response_data))
+	    {           	        
+	    	$message = array('status' => 'success', 'message' => 'Yay response updated', 'response' => $response);
+	    }
+	    else
+	    {
+	        $message = array('status' => 'error', 'message' => 'Dang, could not update response');
+	    }
+
+	    $this->response($message, 200);        
+	}   
     
     
 }

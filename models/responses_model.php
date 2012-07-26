@@ -19,7 +19,7 @@ class Responses_model extends CI_Model
 
     function get_responses_view($parameter, $value, $status, $limit)
     {
- 		if (in_array($parameter, array('user_id','access_value')))
+ 		if (in_array($parameter, array('user_id', 'access_value')))
     	{
 	 		$this->db->select('responses.*, users.username, users.gravatar, users.name, users.image');
 	 		$this->db->from('responses');
@@ -51,9 +51,9 @@ class Responses_model extends CI_Model
     function add_response($response_data)
     {
  		$response_data['created_at'] = unix_to_mysql(now());
-
+ 		$response_data['updated_at'] = unix_to_mysql(now());
 		$insert = $this->db->insert('responses', $response_data);
-		
+
 		if ($response_id = $this->db->insert_id())
 		{
 			$response = $this->get_response($response_id);
@@ -64,13 +64,13 @@ class Responses_model extends CI_Model
     }
 
 
-    function update_response($response_data)
+    function update_response($response_id, $response_data)
     {
  		$response_data['updated_at'] = unix_to_mysql(now());
  		
-		$this->db->where('response_id', $response_data['response_id']);
+		$this->db->where('response_id', $response_id);
 		$this->db->update('responses', $response_data);
-		return $this->db->get_where('responses', array('response_id' => $response_data['response_id']))->row();		
+		return $this->db->get_where('responses', array('response_id' => $response_id))->row();		
     }
 
     function delete_response($response_id)
