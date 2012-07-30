@@ -34,6 +34,25 @@ class Dialogs extends MY_Controller
 
 		$this->load->view('dialogs/response_manager', $this->data);
 	}
-
 	
+	function response_list()
+	{
+		if ($this->uri->segment(4) == 'access_value')
+		{
+			$responses = $this->responses_model->get_responses_access($this->uri->segment(5));
+		}
+		elseif ($this->uri->segment(4) == 'user_id')
+		{
+			$responses = $this->responses_model->get_responses_user($this->uri->segment(5));			
+		}
+		else
+		{
+			$responses = $this->responses_model->get_responses();
+		}
+		
+		$this->data['responses'] = $responses;
+		
+		$this->load->view('dialogs/response_list', $this->data);
+	}
+
 }

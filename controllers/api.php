@@ -11,6 +11,7 @@ class Api extends Oauth_Controller
 
         $this->load->helper('messages');
 		$this->load->library('messages_igniter');
+		$this->load->model('responses_model');		
 	}
 	
     /* Install App */
@@ -335,16 +336,47 @@ class Api extends Oauth_Controller
 
 
 	/* Responses */
-	function create_response_authd_post()
+	function responses_user_authd_get()
 	{
-		$this->load->model('responses_model');
+		$responses = $this->responses_model->get_responses_user($this->oauth_user_id);
+
+		if ($responses)
+	    {
+	    	$message = array('status' => 'success', 'message' => 'Yay created response', 'responses' => $responses);
+	    }
+	    else
+	    {
+	        $message = array('status' => 'error', 'message' => 'Dang, could not create response');
+	    }
 	
+	    $this->response($message, 200);		
+	}
+
+	function responses_access_value_authd_get()
+	{
+		$responses = $this->responses_model->get_responses_access($this->get('app'));
+
+		if ($responses)
+	    {
+	    	$message = array('status' => 'success', 'message' => 'Yay created response', 'responses' => $responses);
+	    }
+	    else
+	    {
+	        $message = array('status' => 'error', 'message' => 'Dang, could not create response');
+	    }
+	
+	    $this->response($message, 200);		
+	}
+	
+	
+	function create_response_authd_post()
+	{	
 		$response_data = array(
 			'user_id' 		=> $this->oauth_user_id,
 			'response'		=> $this->input->post('response'),
 			'access'		=> $this->input->post('access'),
 			'access_value'	=> $this->input->post('access_value'),
-			'status'		=> $this->input->post('status')
+			'status'		=> 'P'
 		);
 	
 		$response = $this->responses_model->add_response($response_data);
@@ -362,9 +394,7 @@ class Api extends Oauth_Controller
 	}    
 	
 	function modify_response_authd_post()
-	{
-		$this->load->model('responses_model');
-	
+	{	
 		$response_data = array(
 			'response'		=> $this->input->post('response'),
 			'access'		=> $this->input->post('access'),

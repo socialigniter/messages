@@ -2,6 +2,7 @@
 
 	<textarea id="response_textarea" name="response" style="height: 100px; width: 400px;"><?= $response ?></textarea>
 
+	<div id="response_access">
 	<h3>Access</h3>
 	<p>
 		<?= form_dropdown('access', config_item('access'), $access, 'id="access"') ?> 
@@ -11,8 +12,6 @@
 			<?php endif; endforeach; ?>
 		</select>
 	</p>
-
-	<h3>Status</h3>
-	<p><?= form_dropdown('status', config_item('status'), $status) ?></p>
+	</div>
 
 </form>

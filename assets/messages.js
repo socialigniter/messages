@@ -8,6 +8,8 @@
 			url_submit		: '',
 			action			: '',
 			title			: '',
+			access			: '',
+			access_value	: '',
 			after 			: function(){}
 		};
 
@@ -40,19 +42,27 @@
 						removeStyles: true,
 						focus: false						
 					});
-					
-					// Access Module
-					$('#access').change(function()
+
+					// Access
+					if (options.access != '')
 					{
-						if ($(this).val() == 'M')
+						$parent_dialog.find('#response_access').hide();						
+					}
+					else
+					{					
+						// Access Module
+						$('#access').change(function()
 						{
-							$('#access_value').fadeIn();		
-						}
-						else
-						{
-							$('#access_value').fadeOut();	
-						}
-					});
+							if ($(this).val() == 'M')
+							{
+								$('#access_value').fadeIn();		
+							}
+							else
+							{
+								$('#access_value').fadeOut();	
+							}
+						});
+					}
 					
 				},
 				buttons	:
@@ -60,6 +70,13 @@
 					'Save':function()
 					{
 						var response_data = $('#response_editor').serializeArray();
+						
+						// Access
+						if (options.access != '')
+						{
+							response_data.push({'name':'access','value':options.access});
+							response_data.push({'name':'access_value','value':options.access_value});
+						}
 	
 						 $.oauthAjax(
 						 {
@@ -71,7 +88,9 @@
 						  	success	: function(result)
 						  	{				
 						  		console.log(result);
+						  		options.after(result);
 						  		
+						  		/*
 						  		if (options.action == 'create')
 						  		{
 									$('#responses').append('<li class="item_data" id="item_' + result.response.response_id + '">\
@@ -86,6 +105,7 @@
 								{
 									$('#item_response_' + result.response.response_id).html(result.response.response);
 								}
+								*/
   	
 								$parent_dialog.dialog('close');
 						  	}		

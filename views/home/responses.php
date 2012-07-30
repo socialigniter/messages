@@ -90,18 +90,13 @@ $(document).ready(function()
 		  		}
 		  	}		
 		});
-
-	
 	});
 
 	/* Actions */
 	$('#create_action').bind('click', function(e)
 	{
-	
 		e.preventDefault();
-		
-		alert('This will eventually create an action');
-	
+		alert('This will eventually create an action');	
 	});
 
 });
