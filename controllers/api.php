@@ -375,8 +375,7 @@ class Api extends Oauth_Controller
 			'user_id' 		=> $this->oauth_user_id,
 			'response'		=> $this->input->post('response'),
 			'access'		=> $this->input->post('access'),
-			'access_value'	=> $this->input->post('access_value'),
-			'status'		=> 'P'
+			'access_value'	=> $this->input->post('access_value')
 		);
 	
 		$response = $this->responses_model->add_response($response_data);
@@ -398,8 +397,7 @@ class Api extends Oauth_Controller
 		$response_data = array(
 			'response'		=> $this->input->post('response'),
 			'access'		=> $this->input->post('access'),
-			'access_value'	=> $this->input->post('access_value'),
-			'status'		=> $this->input->post('status')
+			'access_value'	=> $this->input->post('access_value')
 		);
 
 		if ($response = $this->responses_model->update_response($this->get('id'), $response_data))
@@ -413,6 +411,20 @@ class Api extends Oauth_Controller
 
 	    $this->response($message, 200);        
 	}   
+
+	function destroy_response_authd_get()
+	{
+		if ($response = $this->responses_model->delete_response($this->get('id')))
+	    {           	        
+	    	$message = array('status' => 'success', 'message' => 'Yay, response was deleted');
+	    }
+	    else
+	    {
+	        $message = array('status' => 'error', 'message' => 'Dang, could not delete response');
+	    }
+
+	    $this->response($message, 200);        
+	}  
     
     
 }

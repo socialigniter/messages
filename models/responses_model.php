@@ -74,6 +74,7 @@ class Responses_model extends CI_Model
 	 		$this->db->select('*');
 	 		$this->db->from('responses');
 	 		$this->db->or_where_in('response_id', $response_id_array);
+	 		$this->db->order_by('responses.created_at', 'desc');
 	 		$result = $this->db->get();
 	 		return $result->result();
  		}

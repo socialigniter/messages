@@ -23,6 +23,7 @@
 				modal	: true,
 				close	: function(){$(this).remove()},
 				title	: options.title,
+				position: ['center', 150],
 				create	: function()
 				{
 					$parent_dialog = $(this);
@@ -30,26 +31,29 @@
 					// WYSIWYG
 					var obj = $('#response_textarea').redactor(
 					{
-						buttons: [ 
-							'formatting', '|', 
-							'bold', 'italic', '|', 
+						buttons: [
+							'formatting', '|', 'bold', 'italic', '|', 
 							'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-							'image', 'link', '|', 
-							'fontcolor', '|', 
-							'html',
+							'image', 'link', '|', 'fontcolor', '|', 'html'
 						],
 						autoresize: true,
 						removeStyles: true,
-						focus: false						
+						focus: false
 					});
 
 					// Access
 					if (options.access != '')
 					{
 						$parent_dialog.find('#response_access').hide();						
+						$parent_dialog.find('#response_spacer').show();
 					}
 					else
 					{					
+						if ($('#access_value').val() != '')
+						{
+							$('#access_value').fadeIn();
+						}
+									
 						// Access Module
 						$('#access').change(function()
 						{

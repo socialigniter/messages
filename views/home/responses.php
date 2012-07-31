@@ -45,8 +45,8 @@ $(document).ready(function()
 				if (result.status == 'success')
 				{
 					$('#responses').prepend('<li class="item_data" id="item_' + result.response.response_id + '">\
-						<span id="item_response_' + result.response.response_id + '">' + $(result.response.response).text() + '</span>\
-						<ul class="item_actions">\
+						<span class="item_data_text">' + $(result.response.response).text() + '</span>\
+						<ul class="item_data_actions">\
 							<li><a href="#" data-response_id="' + result.response.response_id + '" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>\
 							<li><a href="#" data-response_id="' + result.response.response_id + '" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>\
 						</ul>\
@@ -60,7 +60,7 @@ $(document).ready(function()
 		});
 	});
 
-	$('.edit_item').bind('click', function(e)
+	$('.edit_item').live('click', function(e)
 	{
 		e.preventDefault();
 		var response_id = $(this).data('response_id');
@@ -72,10 +72,14 @@ $(document).ready(function()
 			title		: 'Edit Response',
 			after 		: function(result)
 			{
+				console.log(result);
+			
 				if (result.status == 'success')
 				{
 					var response = result.response.response.replace(/<(?:.|\n)*?>/gm, '');	
-					$('#item_' + result.response.response_id + ' span.item_data_text').html(response);
+					var response_long	= response.substring(0, 50) + "...";
+
+					$('#item_' + result.response.response_id + ' span.item_data_text').html(response_long);
 				}
 				else
 				{
@@ -85,7 +89,7 @@ $(document).ready(function()
 		});
 	});
 
-	$('.delete_item').bind('click', function(e)
+	$('.delete_item').live('click', function(e)
 	{
 		e.preventDefault();
 		var response_id = $(this).data('response_id');
