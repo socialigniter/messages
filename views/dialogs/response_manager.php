@@ -1,6 +1,6 @@
 <form id="response_editor" name="response_editor" method="post">
 
-	<textarea id="response_textarea" name="response" style="height: 100px; width: 400px;"><?= $response ?></textarea>
+	<textarea id="response_textarea" name="response" style="height: 80px; width: 400px;"><?= $response ?></textarea>
 
 	<div id="response_access">
 	<h3>Access</h3>

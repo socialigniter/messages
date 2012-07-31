@@ -19,7 +19,7 @@
 		{
 			$('<div />').html(partial_html).dialog(
 			{
-				width	: 525,
+				width	: 450,
 				modal	: true,
 				close	: function(){$(this).remove()},
 				title	: options.title,
@@ -63,7 +63,6 @@
 							}
 						});
 					}
-					
 				},
 				buttons	:
 				{
@@ -87,26 +86,7 @@
 							data		: response_data,
 						  	success	: function(result)
 						  	{				
-						  		console.log(result);
-						  		options.after(result);
-						  		
-						  		/*
-						  		if (options.action == 'create')
-						  		{
-									$('#responses').append('<li class="item_data" id="item_' + result.response.response_id + '">\
-										<span id="item_response_' + result.response.response_id + '">' + $(result.response.response).text() + '</span>\
-										<ul class="item_actions">\
-											<li><a href="#" data-response_id="' + result.response.response_id + '" class="edit_item"><span class="actions action_edit"></span> Edit</a></li>\
-											<li><a href="#" data-response_id="' + result.response.response_id + '" class="delete_item"><span class="actions action_delete"></span> Delete</a></li>\
-										</ul>\
-									</li>');
-								}
-								else if (options.action == 'edit')
-								{
-									$('#item_response_' + result.response.response_id).html(result.response.response);
-								}
-								*/
-  	
+						  		options.after(result);  	
 								$parent_dialog.dialog('close');
 						  	}		
 						});

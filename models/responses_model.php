@@ -50,6 +50,23 @@ class Responses_model extends CI_Model
  		return $result->result();	      
     }
 
+    function get_responses($user_id, $user_level_id, $limit='all')
+    {
+ 		$this->db->select('*');
+ 		$this->db->from('responses');
+
+ 		//$this->db->where('access_value', $access_value);
+
+ 		if ($limit != 'all')
+ 		{
+			$this->db->limit($limit);
+ 		}
+
+ 		$this->db->order_by('created_at', 'desc');
+ 		$result = $this->db->get();	
+ 		return $result->result();	      
+    }
+
     function get_responses_multiples($response_id_array)
     {
     	if (count($response_id_array))
