@@ -25,15 +25,20 @@ class Api extends Oauth_Controller
 		$settings = $this->installer->install_settings('messages', config_item('messages_settings'));
 
 		// Create Messages Table
-		$this->dbforge->add_key('message_id', TRUE);
-		$this->dbforge->add_field(config_item('database_messages_messages_table'));
-		$this->dbforge->create_table('messages');
+		if (!$this->db->table_exists('messages'))
+		{		
+			$this->dbforge->add_key('message_id', TRUE);
+			$this->dbforge->add_field(config_item('database_messages_messages_table'));
+			$this->dbforge->create_table('messages');
+		}
 		
 		// Create Responses Table
-		$this->dbforge->add_key('response_id', TRUE);
-		$this->dbforge->add_field(config_item('database_messages_responses_table'));
-		$this->dbforge->create_table('responses');
-
+		if (!$this->db->table_exists('responses'))
+		{
+			$this->dbforge->add_key('response_id', TRUE);
+			$this->dbforge->add_field(config_item('database_messages_responses_table'));
+			$this->dbforge->create_table('responses');
+		}
 
 		if ($settings == TRUE)
 		{
