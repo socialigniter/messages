@@ -156,7 +156,7 @@ class Home extends Dashboard_Controller
 	{
 		$this->load->model('responses_model');
 
-		$this->data['response_list'] = $this->responses_model->get_responses('access', array('E', 'F', 'O'));
+		$this->data['response_list'] = $this->responses_model->get_responses($this->session->userdata('user_id'), $this->session->userdata('user_level_id'));
 	
 		$this->render('dashboard_wide');
 	}

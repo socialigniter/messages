@@ -7,32 +7,50 @@ class Dialogs extends MY_Controller
         
         $this->load->config('messages');
         $this->load->library('messages_igniter');
+        $this->load->model('responses_model');
 	}
 	
 	
 	function response_manager()
-	{
-		$this->data['heading']				= '';
-	
-		// Key Details
-		$this->data['wysiwyg_name']			= 'response';
-		$this->data['wysiwyg_id']			= 'wysiwyg_response';
-		$this->data['wysiwyg_class']		= 'wysiwyg_norm_full';
-		$this->data['wysiwyg_js']			= TRUE;
-		$this->data['wysiwyg_width']		= 500;
-		$this->data['wysiwyg_height']		= 300;
-		$this->data['wysiwyg_resize']		= TRUE;
-		$this->data['wysiwyg_media']		= FALSE;
-		$this->data['wysiwyg_value']		= '';
-		$this->data['wysiwyg_response']		= $this->load->view($this->config->item('dashboard_theme').'/partials/wysiwyg', $this->data, true);
+	{		
+		if ($this->uri->segment(4))
+		{
+			$response = $this->responses_model->get_response($this->uri->segment(4));
 
-		$this->data['access'] 				= 'O';
-		$this->data['access_value']			= '';
-		$this->data['status']				= 'P';
+			$this->data['response']			= $response->response;
+			$this->data['access'] 			= $response->access;
+			$this->data['access_value']		= $response->access_value;
+		}
+		else
+		{
+			$this->data['response']			= '';
+			$this->data['access'] 			= 'E';
+			$this->data['access_value']		= '';
+		}
+
+		$this->data['modules'] = $this->social_igniter->scan_modules();
+
+		$this->load->view('dialogs/response_manager', $this->data);
+	}
 	
-		$this->load->view('dialogs/response_manager', $this->data);	
+	function response_list()
+	{
+		if ($this->uri->segment(4) == 'access_value')
+		{
+			$responses = $this->responses_model->get_responses_access($this->uri->segment(5));
+		}
+		elseif ($this->uri->segment(4) == 'user_id')
+		{
+			$responses = $this->responses_model->get_responses_user($this->uri->segment(5));			
+		}
+		else
+		{
+			$responses = $this->responses_model->get_responses();
+		}
+		
+		$this->data['responses'] = $responses;
+		
+		$this->load->view('dialogs/response_list', $this->data);
 	}
 
-
-	
 }
