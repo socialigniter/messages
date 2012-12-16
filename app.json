@@ -1,0 +1,12 @@
+{
+	"app":"messages",
+	"name":"Messages",
+	"created":"2012-12-15",
+	"updated":"2012-12-15",
+	"creator":"Brennan Novak",
+	"category":"messages",
+	"links":{
+		"default":"home/messages/inbox"
+	},
+	"launcher":"yes"
+}

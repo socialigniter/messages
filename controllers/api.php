@@ -11,7 +11,6 @@ class Api extends Oauth_Controller
 
         $this->load->helper('messages');
 		$this->load->library('messages_igniter');
-		$this->load->model('responses_model');		
 	}
 	
     /* Install App */
@@ -40,7 +39,7 @@ class Api extends Oauth_Controller
 			$this->dbforge->add_field(config_item('database_messages_responses_table'));
 			$this->dbforge->create_table('responses');
 		}
-
+		
 		if ($settings == TRUE)
 		{
             $message = array('status' => 'success', 'message' => 'Yay, the Messages App was installed');
@@ -341,95 +340,34 @@ class Api extends Oauth_Controller
 
 
 	/* Responses */
-	function responses_user_authd_get()
-	{
-		$responses = $this->responses_model->get_responses_user($this->oauth_user_id);
-
-		if ($responses)
-	    {
-	    	$message = array('status' => 'success', 'message' => 'Yay created response', 'responses' => $responses);
-	    }
-	    else
-	    {
-	        $message = array('status' => 'error', 'message' => 'Dang, could not create response');
-	    }
-	
-	    $this->response($message, 200);		
-	}
-
-	function responses_access_value_authd_get()
-	{
-		$responses = $this->responses_model->get_responses_access($this->get('app'));
-
-		if ($responses)
-	    {
-	    	$message = array('status' => 'success', 'message' => 'Yay created response', 'responses' => $responses);
-	    }
-	    else
-	    {
-	        $message = array('status' => 'error', 'message' => 'Dang, could not create response');
-	    }
-	
-	    $this->response($message, 200);		
-	}
-	
-	
 	function create_response_authd_post()
-	{	
+	{
+		$this->load->model('responses_model');
+	
 		$response_data = array(
 			'user_id' 		=> $this->oauth_user_id,
+			'heading'		=> $this->input->post('heading'),
 			'response'		=> $this->input->post('response'),
 			'access'		=> $this->input->post('access'),
-			'access_value'	=> $this->input->post('access_value')
+			'access_value'	=> $this->input->post('access_value'),
+			'status'		=> $this->input->post('status')
 		);
 	
 		$response = $this->responses_model->add_response($response_data);
 	
 		if ($response)
 	    {           	        
-	    	$message = array('status' => 'success', 'message' => 'Yay created response', 'response' => $response);
+	    	$message = array('status' => 'success', 'message' => 'Yay', 'response' => $response);
 	    }
 	    else
 	    {
-	        $message = array('status' => 'error', 'message' => 'Dang, could not create response');
+	        $message = array('status' => 'error', 'message' => 'Nay');
 	    }
 	
 	    $this->response($message, 200);        
 	}    
 	
-	function modify_response_authd_post()
-	{	
-		$response_data = array(
-			'response'		=> $this->input->post('response'),
-			'access'		=> $this->input->post('access'),
-			'access_value'	=> $this->input->post('access_value')
-		);
 
-		if ($response = $this->responses_model->update_response($this->get('id'), $response_data))
-	    {           	        
-	    	$message = array('status' => 'success', 'message' => 'Yay response updated', 'response' => $response);
-	    }
-	    else
-	    {
-	        $message = array('status' => 'error', 'message' => 'Dang, could not update response');
-	    }
-
-	    $this->response($message, 200);        
-	}   
-
-	function destroy_response_authd_get()
-	{
-		if ($response = $this->responses_model->delete_response($this->get('id')))
-	    {           	        
-	    	$message = array('status' => 'success', 'message' => 'Yay, response was deleted');
-	    }
-	    else
-	    {
-	        $message = array('status' => 'error', 'message' => 'Dang, could not delete response');
-	    }
-
-	    $this->response($message, 200);        
-	}  
     
     
 }
